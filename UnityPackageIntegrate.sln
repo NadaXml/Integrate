@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITableViewForUnity", "UITableViewForUnity.csproj", "{e57e0bc1-b2d1-9d94-d9db-39e5d583e91e}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{f815e333-721a-76fd-68f3-837e7190b0be}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{e57e0bc1-b2d1-9d94-d9db-39e5d583e91e}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{e57e0bc1-b2d1-9d94-d9db-39e5d583e91e}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f815e333-721a-76fd-68f3-837e7190b0be}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f815e333-721a-76fd-68f3-837e7190b0be}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

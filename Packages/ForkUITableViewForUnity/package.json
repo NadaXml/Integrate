@@ -1,0 +1,14 @@
+{
+	"name": "com.integrate.uitableviewforunity",
+	"displayName": "UITableViewForUnity",
+	"version": "0.0.1",
+	"unity": "2021.3",
+	"description": "fork by https://github.com/zhaozilong1988/UITableViewForUnity/releases/tag/v202312070022 sha is ",
+	"samples": [
+    {
+      "displayName": "Sample1",
+      "description": "Init",
+      "path": "Samples~"
+    }
+  ]
+}
