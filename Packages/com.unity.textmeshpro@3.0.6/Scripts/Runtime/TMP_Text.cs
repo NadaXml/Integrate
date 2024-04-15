@@ -5935,11 +5935,25 @@ namespace TMPro
             colors32[2 + index] = highlightColor;
             colors32[3 + index] = highlightColor;
             #endregion
+            
+            // Begin of added code
+            {
+                var meshInfo = m_textInfo.meshInfo[underlineMaterialIndex];
+                int previousSize = index / 4;
+                if (s_tris == null || s_tris.Length != 6)
+                    s_tris = new int[6];
+                Array.Copy(meshInfo.triangles, previousSize * 6, s_tris, 0, 6);
+                Array.Copy(meshInfo.triangles, 0, meshInfo.triangles, 6, previousSize * 6);
+                Array.Copy(s_tris, 0, meshInfo.triangles, 0, 6);
+                meshInfo.mesh.triangles = meshInfo.triangles;
+            }
+            // End of added code
 
             index += 4;
         }
         
-        private static int[] s_tris;
+        // Cached array to copy triangles, length 6.
+        private static int[] s_tris; // Added line
 
         /// <summary>
         /// Internal function used to load the default settings of text objects.

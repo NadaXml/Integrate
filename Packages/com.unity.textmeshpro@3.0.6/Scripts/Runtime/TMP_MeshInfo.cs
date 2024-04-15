@@ -263,6 +263,7 @@ namespace TMPro
             // Re-assign Normals, Tangents and Triangles
             if (size <= previousSize)
             {
+                this.mesh.Clear(true); // Added line
                 this.mesh.triangles = this.triangles;
                 this.mesh.vertices = this.vertices;
                 this.mesh.normals = this.normals;
@@ -336,6 +337,7 @@ namespace TMPro
             // Re-assign Normals, Tangents and Triangles
             if (size <= previousSize)
             {
+                this.mesh.Clear(true); 
                 this.mesh.triangles = this.triangles;
                 this.mesh.vertices = this.vertices;
                 this.mesh.normals = this.normals;

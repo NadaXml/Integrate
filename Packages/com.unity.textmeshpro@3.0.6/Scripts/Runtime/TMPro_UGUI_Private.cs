@@ -1680,7 +1680,27 @@ namespace TMPro
         protected virtual void GenerateTextMesh()
         {
             k_GenerateTextMarker.Begin();
-
+            
+            // Begin of added code
+            for (var index = 0; index < m_textInfo.meshInfo.Length; index++)
+            {
+                var mi = m_textInfo.meshInfo[index];
+                var tris = mi.triangles;
+                int quadCount = mi.vertices.Length / 4;
+                for (int i = 0; i < quadCount; i++)
+                {
+                    int index_X4 = i * 4;
+                    int index_X6 = i * 6;
+                    tris[0 + index_X6] = 0 + index_X4;
+                    tris[1 + index_X6] = 1 + index_X4;
+                    tris[2 + index_X6] = 2 + index_X4;
+                    tris[3 + index_X6] = 2 + index_X4;
+                    tris[4 + index_X6] = 3 + index_X4;
+                    tris[5 + index_X6] = 0 + index_X4;
+                }
+            }
+            // End of added code
+            
             // Early exit if no font asset was assigned. This should not be needed since LiberationSans SDF will be assigned by default.
             if (m_fontAsset == null || m_fontAsset.characterLookupTable == null)
             {
