@@ -1,0 +1,8 @@
+{
+  "name": "com.lxm.redtiphelper",
+  "version": "0.0.1",
+  "displayName": "RedTipHelper",
+  "dependencies": {
+    "org.nuget.scriban": "5.10.0"
+  }
+}
