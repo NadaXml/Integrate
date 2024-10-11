@@ -1,4 +1,4 @@
-namespace Core {
+namespace RedTipHelper.Core {
     public interface IService {
         void Init();
         void UnInit();

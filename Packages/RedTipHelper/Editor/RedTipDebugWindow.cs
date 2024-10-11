@@ -120,7 +120,7 @@ namespace RedTipDebug.Editor {
 
         public static event Func<string> GetShowGraphStr;
 
-        [MenuItem ("RedTipRRTemplate/DebugView")]
+        [MenuItem ("RedTipCode/DebugView")]
         static void ShowWindow ()
         {
             // Get existing open window or if none, make a new one:

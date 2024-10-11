@@ -1,4 +1,4 @@
-namespace Core {
+namespace RedTipHelper.Core {
     public interface ILifecycle {
         void Awake();
         void Start();
@@ -6,7 +6,7 @@ namespace Core {
     }
 
     public interface IRedTipLifecycle : ILifecycle {
-        void Calc();
+        bool Calc();
         void CalcSchedule();
     }
 }

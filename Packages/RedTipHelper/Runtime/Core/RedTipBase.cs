@@ -3,7 +3,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using UnityEditor;
 using UnityEditor.UI;
-namespace Core {
+namespace RedTipHelper.Core {
     public class RedTipBase : IRedTipLifecycle {
 
         string _location;
@@ -36,17 +36,20 @@ namespace Core {
         string[] _refKeys;
         bool _isActive;
 
-        RedTipBase(string key, IRedTipContext context) {
+        public RedTipBase(string key, IRedTipContext context) {
             Key = key;
             Context = context;
             _childrenActiveNum = 0;
             _childrenDirty = false;
             _isActive = false;
         }
+        
         public void Awake() {
+            ValCalc?.Awake();
             OnAwake();
         }
         public void Start() {
+            ValCalc?.Start();
             OnStart();
         }
         public void Destroy() {
@@ -56,21 +59,32 @@ namespace Core {
             }
             OnDestroy();
         }
-        public void Calc() {
+        public bool Calc() {
+            var prev = GetActive(true);
+            ValCalc?.Calc();
             OnCalc();
+            var after = GetActive();
+            if (prev != after) {
+                if (Parent != null) {
+                    Parent.MarkChildrenDirty();
+                    Parent.CalcSchedule();
+                }
+                Context.TriggerRef(Key);
+            }
+            return prev != after;
         }
         public void CalcSchedule() {
             Context.AddToRefreshSchedule(this);
         }
 
-        void TriggerRef() {
+        public void TriggerRef() {
             CalcSchedule();
         }
 
-        bool GetActive(bool isOld = false) {
+        public bool GetActive(bool isOld = false) {
             var ownActive = false;
             if (ValCalc != null) {
-                ownActive = ValCalc.GetActive();
+                ownActive = ValCalc.IsActive;
             }
             if ( !isOld ) {
                 TryChildrenDirty();
@@ -79,7 +93,12 @@ namespace Core {
         }
 
         public string DumpStr() {
-            return null;
+            var active = GetActive();
+            var activeA = 0;
+            if (active) {
+                activeA = 1;
+            }
+            return string.Format("{0}:{1}", Key, activeA);
         }
 
         void MarkChildrenDirty() {
@@ -101,7 +120,7 @@ namespace Core {
             _childrenDirty = false;
         }
 
-        string[] GetRefKeys() {
+        protected string[] GetRefKeys() {
             // TODO 从配置读取
             return null;
         }

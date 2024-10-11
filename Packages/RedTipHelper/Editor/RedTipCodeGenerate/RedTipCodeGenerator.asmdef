@@ -1,7 +1,9 @@
 {
     "name": "RedTipCodeGenerator",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:762efe8e9bad803429dccc78625714c7"
+    ],
     "includePlatforms": [
         "Editor"
     ],

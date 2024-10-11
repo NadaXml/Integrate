@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-namespace Core {
+namespace RedTipHelper.Core {
     public interface IRedTipContext {
-        Dictionary<string, string> RefObservers { get; }
+        Dictionary<string, List<string>> RefObservers { get; }
         IRedTipSchedule RefreshSchedule { get; }
 
-        RedTipBase GetRedTip();
-        void RegisterRefObserver(RedTipBase subject, RedTipBase observer);
-        void UnRegisterObserver(RedTipBase subject, RedTipBase observer);
-        void TriggerRef(RedTipBase subject);
+        RedTipBase GetRedTip(string key);
+        void RegisterRefObserver(string subject, string observer);
+        void UnRegisterObserver(string subject, string observer);
+        void TriggerRef(string subject);
         void AddToRefreshSchedule(RedTipBase redTip);
     }
 }
