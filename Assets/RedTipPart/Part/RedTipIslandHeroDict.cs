@@ -13,7 +13,9 @@ namespace RedTipPart.Part {
         }
         
         protected override void OnStart() {
-            // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDefault;
+            RedTipCalcDict<int> calc = ValCalc as RedTipCalcDict<int>;
+            calc.SetKeys(new []{1,2});
+            CalcSchedule();
         }
 
         protected override void OnCalc() {
@@ -23,10 +25,13 @@ namespace RedTipPart.Part {
         protected override void OnDestroy() {
   
         }
-
-
  
         bool CalcImp(int key) {
+            if (key == 1) {
+                return true;
+            } else if (key == 2) {
+                return false;
+            }
             return false;
         }
 

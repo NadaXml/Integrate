@@ -27,7 +27,7 @@ namespace RedTipPart.Part {
 
  
         bool CalcImp() {
-            return true;
+            return false;
         }
 
 

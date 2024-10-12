@@ -1,5 +1,6 @@
 
 using RedTipHelper.Core;
+using System.Threading;
 
 namespace RedTipPart.Part {
     public class RedTipMain : RedTipBase {
@@ -20,7 +21,6 @@ namespace RedTipPart.Part {
         }
 
         protected override void OnDestroy() {
-  
         }
         
     }

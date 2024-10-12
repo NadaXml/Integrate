@@ -13,6 +13,7 @@ namespace RedTipPart {
         void Awake() {
             _service = new RedTipService();
             
+            // TODO 反射，或者代码生成
             RedTipService.BindCreate(RedTipConstImp.Main, (_key, _service) => {
                 return new RedTipMain(_key, _service);
             });
@@ -35,6 +36,11 @@ namespace RedTipPart {
             
             _service.Init();
             _service.Start();
+            
+            _service.AddRedTip(RedTipConstImp.IslandHero, RedTipConstImp.IslandHeroDict);
+            _service.RemoveRedTipDict(RedTipConstImp.IslandHeroDict, 1);
+            _service.AddRedTipDict(RedTipConstImp.IslandHeroDict, 1);
+            _service.RemoveRedTip(RedTipConstImp.IslandHeroDict);
 
             
 #if UNITY_EDITOR

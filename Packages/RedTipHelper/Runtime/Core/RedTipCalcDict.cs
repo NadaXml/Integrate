@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace RedTipHelper.Core {
     public class RedTipCalcDict<T> : RedTipCalc 
@@ -53,18 +54,20 @@ namespace RedTipHelper.Core {
         
         public override void Calc() {
             bool final = _relation == RelationType.AND;
-            foreach (KeyValuePair<T,CalcState> keyValuePair in _state) {
-                var state = _fun.Invoke(keyValuePair.Key);
+
+            var keys = _state.Keys.ToArray();
+            foreach (T key in keys) {
+                var state = _fun.Invoke(key);
                 if (_relation == RelationType.OR) {
                     final = final || state;
                 } else if (_relation == RelationType.AND) {
                     final = final && state;
                 }
                 if (state) {
-                    _state[keyValuePair.Key] = CalcState.Active;
+                    _state[key] = CalcState.Active;
                 }
                 else {
-                    _state[keyValuePair.Key] = CalcState.NoActive;
+                    _state[key] = CalcState.NoActive;
                 }
             }
             IsActive = final;

@@ -131,9 +131,9 @@ namespace RedTipPart.Part {
         }
         
         protected override void OnStart() {
-{{ if calcType == 1 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDefault; {{ end }}
-{{ if calcType == 2 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDefault; {{ end }}
-{{ if calcType == 3 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDict<int>;{{ end }}
+{{ if calcType == 1 }} // RedTipCalcDefault calc = ValCalc as RedTipCalcDefault; {{ end }}
+{{ if calcType == 2 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDict<int>; {{ end }}
+{{ if calcType == 3 }} // RedTipCalcRefOther calc = ValCalc as RedTipCalcRefOther;{{ end }}
         }
 
         protected override void OnCalc() {

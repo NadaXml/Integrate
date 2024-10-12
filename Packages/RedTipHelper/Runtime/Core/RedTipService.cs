@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using RedTipHelper.Config;
-using System.ComponentModel.Composition.Hosting;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
-using UnityEditor.UI;
 
 namespace RedTipHelper.Core {
     public class RedTipService : IRedTipContext, IRedTipService {
@@ -63,6 +60,9 @@ namespace RedTipHelper.Core {
                 int index = observers.IndexOf(observer);
                 if (index != -1) {
                     observers.RemoveAt(index);
+                    if (observers.Count == 0) {
+                        RefObservers.Remove(subject);
+                    }
                 }
                 else {
                     Debug.LogErrorFormat("删除失败 subject {0} <- observer {1}", subject, observer);
@@ -120,10 +120,22 @@ namespace RedTipHelper.Core {
                 _redTipSchedule = null;
             }
             _rootRedTip = null;
-            RefObservers.Clear();
             foreach (KeyValuePair<int,RedTipBase> keyValuePair in _redTipLUT) {
                 keyValuePair.Value.Destroy();
             }
+            if (IsDevMode) {
+                if (RefObservers.Count > 0) {
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append("节点引用清理不干净：");
+                    foreach (var pair in RefObservers) {
+                        builder.Append(pair.Key);
+                        builder.Append(" ref ");
+                        builder.AppendJoin(';', pair.Value.ToArray());
+                    }
+                    Debug.LogError(builder);
+                }
+            }
+            RefObservers.Clear();
             _redTipLUT.Clear();
         }
         public void Start() {
@@ -436,7 +448,7 @@ namespace RedTipHelper.Core {
             }
 
             RedTipCalcDict<T> calc = redTip.ValCalc as RedTipCalcDict<T>;
-            if (calc == null) {
+            if (calc != null) {
                 if (calc.RemoveKey(id)) {
                     redTip.CalcSchedule();
                 }
