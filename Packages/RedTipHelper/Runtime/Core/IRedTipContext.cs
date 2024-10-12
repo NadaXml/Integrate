@@ -4,6 +4,7 @@ namespace RedTipHelper.Core {
         Dictionary<string, List<string>> RefObservers { get; }
         IRedTipSchedule RefreshSchedule { get; }
 
+        IList<string> GetRefKeys(string key);
         RedTipBase GetRedTip(string key);
         void RegisterRefObserver(string subject, string observer);
         void UnRegisterObserver(string subject, string observer);

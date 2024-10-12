@@ -1,11 +1,14 @@
-using UnityEditor.UI;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace RedTipHelper.Core {
     public class RedTipCalcRefOther : RedTipCalc {
 
-        string[] _refKeys;
+        List<string> _refKeys;
         RelationType _relation;
         
         public RedTipCalcRefOther(IRedTipContext context, RedTipBase caller) : base(context, caller) {
+            _refKeys = new List<string>();
             _relation = RelationType.OR;
             _calcType = CalcType.RefOther;
         }
@@ -14,7 +17,7 @@ namespace RedTipHelper.Core {
             if (keys == null) {
                 return;
             }
-            _refKeys = keys;
+            _refKeys.AddRange(keys);
             foreach (var key in keys) {
                 _context.RegisterRefObserver(key, Caller.Key);
             }
@@ -26,6 +29,12 @@ namespace RedTipHelper.Core {
             }
             foreach (string refKey in _refKeys) {
                 _context.UnRegisterObserver(refKey, Caller.Key);
+            }
+        }
+
+        public void RemoveRef(string key) {
+            if (_refKeys.Remove(key)) {
+                _context.UnRegisterObserver(key, Caller.Key);
             }
         }
         
@@ -42,9 +51,11 @@ namespace RedTipHelper.Core {
                     }
                 }
                 else {
-                    // TODO 异常日志
+                    // 正常情况，目前节点删除，不会删除关联
+                    Debug.Log($"节点引用，找不到关联{Caller.Key} ref {refKey}");
                 }
             }
+            IsActive = final;
         }
 
         public override void OnDestroy() {

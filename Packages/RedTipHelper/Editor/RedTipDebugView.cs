@@ -341,7 +341,7 @@ namespace RedTipDebug.Editor {
                     headerTextAlignment = TextAlignment.Left,
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Center,
-                    width = 150,
+                    width = 200,
                     minWidth = 60,
                     autoResize = false,
                     allowToggleVisibility = false
@@ -352,7 +352,7 @@ namespace RedTipDebug.Editor {
                     headerTextAlignment = TextAlignment.Right,
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Left,
-                    width = 110,
+                    width = 60,
                     minWidth = 60,
                     autoResize = true
                 },
@@ -361,7 +361,7 @@ namespace RedTipDebug.Editor {
                     headerTextAlignment = TextAlignment.Right,
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Left,
-                    width = 110,
+                    width = 60,
                     minWidth = 60,
                     autoResize = true
                 }

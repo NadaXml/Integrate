@@ -28,18 +28,20 @@ namespace RedTipHelper.Core {
             _state.Clear();
         }
 
-        public void AddKey(T key) {
+        public bool AddKey(T key) {
             if (_state.ContainsKey(key)) {
                 Debug.LogError("重复添加 " + key);
-                return;
+                return false;
             }
             _state.Add(key, CalcState.NoActive);
+            return true;
         }
 
-        public void RemoveKey(T key) {
+        public bool RemoveKey(T key) {
             if (_state.ContainsKey(key)) {
-                _state.Remove(key);
+                return _state.Remove(key);
             }
+            return false;
         }
 
         public bool GetActiveDict(T key) {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 namespace RedTipPart.Config {
-    public class RedTipRelation : RedTipHelper.Config.RedTipRelation {
+    public class RedTipRelationImp : RedTipHelper.Config.RedTipRelation {
 
         Dictionary<string, List<string>> _relation;
         public override Dictionary<string, List<string>> Relation
@@ -8,12 +8,18 @@ namespace RedTipPart.Config {
             get {
                 if (_relation == null) {
                     _relation = new Dictionary<string, List<string>>() {
-                        [RedTipConst.Main] = {
-                            RedTipConst.IslandHero,
-                            RedTipConst.IslandHeroRef
+                        {
+                            RedTipConstImp.Main, 
+                            new List<string> {
+                                RedTipConstImp.IslandHero,
+                                RedTipConstImp.IslandHeroRef
+                            }
                         },
-                        [RedTipConst.IslandHero] = {
-                            RedTipConst.IslandHeroDict
+                        {
+                            RedTipConstImp.IslandHero, 
+                            new List<string> {
+                                RedTipConstImp.IslandHeroDict,
+                            }
                         }
                     };
                 }
@@ -27,8 +33,11 @@ namespace RedTipPart.Config {
             get {
                 if (_refRelation == null) {
                     _refRelation = new Dictionary<string, List<string>>() {
-                        [RedTipConst.IslandHeroRef] = {
-                            RedTipConst.IslandHero
+                        {
+                            RedTipConstImp.IslandHeroRef, 
+                            new List<string> {
+                                RedTipConstImp.IslandHero
+                            }
                         }
                     };
                 }

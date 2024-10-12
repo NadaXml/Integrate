@@ -9,6 +9,12 @@ namespace RedTipPart.Config {
         public const string Main = "RedTipMain";
 
         string[] _keys;
+        public override string Root
+        {
+            get {
+                return Main;
+            }
+        }
         public override string[] GetKeys() {
             if (_keys == null) {
                 _keys = new string[] {

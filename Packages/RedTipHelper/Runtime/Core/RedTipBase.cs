@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using UnityEditor;
@@ -101,7 +102,7 @@ namespace RedTipHelper.Core {
             return string.Format("{0}:{1}", Key, activeA);
         }
 
-        void MarkChildrenDirty() {
+        public void MarkChildrenDirty() {
             _childrenDirty = true;
         }
 
@@ -121,13 +122,16 @@ namespace RedTipHelper.Core {
         }
 
         protected string[] GetRefKeys() {
-            // TODO 从配置读取
+            var keys = Context.GetRefKeys(Key);
+            if (keys != null) {
+                return keys.ToArray();
+            }
             return null;
         }
         
-        public virtual void OnAwake() {}
-        public virtual void OnStart() {}
-        public virtual void OnCalc() {}
-        public virtual void OnDestroy() {}
+        protected virtual void OnAwake() {}
+        protected virtual void OnStart() {}
+        protected virtual void OnCalc() {}
+        protected virtual void OnDestroy() {}
     }
 }

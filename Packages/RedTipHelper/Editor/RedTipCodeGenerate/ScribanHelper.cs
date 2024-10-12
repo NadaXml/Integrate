@@ -126,21 +126,21 @@ namespace RedTipPart.Part {
             ValCalc = calc; {{ end }}
         }
 
-        public override void OnAwake() {
+        protected override void OnAwake() {
             
         }
         
-        public override void OnStart() {
+        protected override void OnStart() {
 {{ if calcType == 1 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDefault; {{ end }}
 {{ if calcType == 2 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDefault; {{ end }}
 {{ if calcType == 3 }} // RedTipCalcDict<int> calc = ValCalc as RedTipCalcDict<int>;{{ end }}
         }
 
-        public override void OnCalc() {
+        protected override void OnCalc() {
           
        }
 
-        public override void OnDestroy() {
+        protected override void OnDestroy() {
   
         }
 

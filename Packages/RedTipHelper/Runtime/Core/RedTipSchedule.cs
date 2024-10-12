@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 namespace RedTipHelper.Core {
     public class RedTipSchedule : IRedTipSchedule {
 
@@ -36,6 +37,7 @@ namespace RedTipHelper.Core {
                     break;
                 }
                 var redTip = _queue.Dequeue();
+                Debug.Log($"调度刷新 {redTip.Key}");
                 if (redTip.Calc()) {
                     changed.Add(redTip.Key);
                     num++;
