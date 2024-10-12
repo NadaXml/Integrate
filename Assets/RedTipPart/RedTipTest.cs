@@ -13,24 +13,10 @@ namespace RedTipPart {
         void Awake() {
             _service = new RedTipService();
             
-            // TODO 反射，或者代码生成
-            RedTipService.BindCreate(RedTipConstImp.Main, (_key, _service) => {
-                return new RedTipMain(_key, _service);
-            });
-            
-            RedTipService.BindCreate(RedTipConstImp.IslandHero, (_key, _service) => {
-                return new RedTipIslandHero(_key, _service);
-            });
-            
-            RedTipService.BindCreate(RedTipConstImp.IslandHeroDict, (_key, _service) => {
-                return new RedTipIslandHeroDict(_key, _service);
-            });
-            
-            RedTipService.BindCreate(RedTipConstImp.IslandHeroRef, (_key, _service) => {
-                return new RedTipIslandHeroRef(_key, _service);
-            });
-
             var source = new RedTipConstImp();
+            source.BindCreator(_service);
+            source.Root = RedTipConstImp.Main;
+            
             var relation = new RedTipRelationImp();
             _service.SetSource(source, relation);
             

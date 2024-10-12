@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace RedTipHelper.Config {
     
     public abstract class RedTipConst {
-        public abstract string Root { get; }
+        public abstract string Root { get; set; }
 
         public abstract string[] GetKeys();
     }

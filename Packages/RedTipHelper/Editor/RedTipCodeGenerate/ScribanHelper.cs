@@ -24,11 +24,20 @@ namespace RedTipCodeGenerator {
 @"
 // ------ auto gen begin ------
 
+using RedTipHelper.Core;
+using RedTipPart.Part;
+
 namespace RedTipPart.Config {
-    public class RedTipConst : RedTipHelper.Config.RedTipConst{
+    public class RedTipConstImp : RedTipHelper.Config.RedTipConst{
 {{~ for $obj in sp ~}}
         public const string {{ $obj.name }} = ""{{ $obj.path }}"";
 {{~ end ~}}
+        
+        // 这里强制
+        public override string Root
+        {
+            get;set;
+        }
 
         string[] _keys;
         public override string[] GetKeys() {
@@ -41,6 +50,16 @@ namespace RedTipPart.Config {
             }
             return _keys;
         }
+
+        public void BindCreator(IRedTipService service) {
+{{~ for $obj in sp ~}}
+            RedTipService.BindCreate(RedTipConstImp.{{ $obj.name }}, {{ $obj.path }}Creator);
+{{~ end ~}}
+        }
+
+{{~ for $obj in sp ~}}
+        static RedTipBase {{ $obj.path }}Creator(string key, IRedTipContext service) { return new {{ $obj.path }}(key, service); }
+{{~ end ~}}
     }
 }
 
