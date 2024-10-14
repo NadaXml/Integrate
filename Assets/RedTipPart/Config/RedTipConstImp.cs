@@ -14,8 +14,7 @@ namespace RedTipPart.Config {
         // 这里强制
         public override string Root
         {
-            get;
-            set;
+            get;set;
         }
 
         string[] _keys;
