@@ -5,3 +5,6 @@ Logs
 Bundles
 obj
 BuildResult
+*.csproj
+*.sln
+UserSettings
