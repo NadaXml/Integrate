@@ -40,6 +40,15 @@ namespace YooAsset.Editor
         }
     }
 
+    [DisplayName("收集包含UserData规则的.anim")]
+    public class CollectRegex : IFilterRule {
+
+        public bool IsCollectAsset(FilterRuleData data) {
+            var fileName = Path.GetFileName(data.AssetPath);
+            return fileName.Contains(data.UserData) && Path.GetExtension(data.AssetPath) == ".anim";
+        }
+    }
+
     [DisplayName("收集预制体")]
     public class CollectPrefab : IFilterRule
     {

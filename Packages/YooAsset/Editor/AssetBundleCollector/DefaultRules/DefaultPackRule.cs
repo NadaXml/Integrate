@@ -119,6 +119,30 @@ namespace YooAsset.Editor
     }
 
     /// <summary>
+    /// 以收集器路径+UserData作为资源包名
+    /// 注意：收集的所有文件打进一个资源包
+    /// </summary>
+    [DisplayName("资源包名: 收集器路径+UserData")]
+    public class PackCollectorUserData : IPackRule {
+
+        public PackRuleResult GetPackRuleResult(PackRuleData data) {
+            string bundleName;
+            string collectPath = data.CollectPath;
+            if (AssetDatabase.IsValidFolder(collectPath))
+            {
+                bundleName = collectPath;
+            }
+            else
+            {
+                bundleName = PathUtility.RemoveExtension(collectPath);
+            }
+            bundleName = $"{bundleName}/{data.UserData}";
+            PackRuleResult result = new PackRuleResult(bundleName, DefaultPackRule.AssetBundleFileExtension);
+            return result;
+        }
+    }
+
+    /// <summary>
     /// 以分组名称作为资源包名
     /// 注意：收集的所有文件打进一个资源包
     /// </summary>
