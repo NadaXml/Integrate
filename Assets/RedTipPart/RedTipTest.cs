@@ -1,4 +1,6 @@
-using RedTipDebug.Editor;
+#if UNITY_EDITOR
+    using RedTipDebug.Editor;
+#endif
 using RedTipHelper.Config;
 using UnityEngine;
 using RedTipHelper.Core;

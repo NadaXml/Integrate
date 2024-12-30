@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
-using UnityEditor;
-using UnityEditor.UI;
 namespace RedTipHelper.Core {
     public class RedTipBase : IRedTipLifecycle {
 
