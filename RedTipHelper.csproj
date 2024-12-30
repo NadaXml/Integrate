@@ -310,6 +310,9 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>D:\OtherUnity\2021.3.44f1c1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Collections.LowLevel.ILSupport">
+      <HintPath>E:\fork\Integrate\Library\PackageCache\com.unity.collections@1.5.1\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>E:\fork\Integrate\Library\PackageCache\com.unity.collab-proxy@2.5.1\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -342,6 +345,9 @@
     </Reference>
     <Reference Include="Scriban">
       <HintPath>E:\fork\Integrate\Packages\org.nuget.scriban@5.10.0\Scriban.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>E:\fork\Integrate\Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>E:\fork\Integrate\Packages\org.nuget.system.runtime.compilerservices.unsafe@4.5.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
