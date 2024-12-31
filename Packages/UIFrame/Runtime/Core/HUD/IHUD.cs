@@ -1,8 +1,9 @@
+using UnityEngine;
 namespace Core.HUD {
-    public interface IHUD {
+    public interface IHUD<T> where T : MonoBehaviour {
         HUDComponent Component { get; set; }
         
-        HUDAssetComponent Asset { get; set; }
+        HUDAssetComponent<T> Asset { get; set; }
         
         HUDRandomComponent Random { get; set; }
 

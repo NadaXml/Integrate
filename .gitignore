@@ -8,3 +8,5 @@ BuildResult
 *.csproj
 *.sln
 UserSettings
+Release
+Assets/StreamingAssets

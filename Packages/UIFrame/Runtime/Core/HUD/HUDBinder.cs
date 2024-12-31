@@ -1,11 +1,9 @@
-using System;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 namespace Core.HUD {
     public class HUDBinder : MonoBehaviour {
-        public Image hp;
-        public TextMeshProUGUI name;
-        public TextMeshProUGUI job;
+        public SpriteRenderer hp;
+        public TextMeshPro name;
+        public TextMeshPro job;
     }
 }

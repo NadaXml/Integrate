@@ -1,5 +1,6 @@
+using UnityEngine;
 namespace Core.HUD {
-    public class HUDBase : IHUD {
+    public class HUDBase<T> : IHUD<T> where T : MonoBehaviour {
 
         public struct HUDCreateParam {
             public HUDComponent Component;
@@ -10,7 +11,7 @@ namespace Core.HUD {
             get;
             set;
         }
-        public HUDAssetComponent Asset
+        public HUDAssetComponent<T> Asset
         {
             get;
             set;
