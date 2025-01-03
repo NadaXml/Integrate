@@ -11,7 +11,11 @@ namespace Core.HUD {
         }
         
         public Vector3 EndPosition;
+        public float EndScale;
         public RandomState State;
         public MotionHandle Handle;
+        public MotionHandle ScaleHandle;
+
+        public float Distance;
     }
 }

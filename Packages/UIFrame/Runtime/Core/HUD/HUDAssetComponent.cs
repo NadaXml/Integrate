@@ -5,5 +5,7 @@ namespace Core.HUD {
         public AssetHandle AssetHandle;
         public GameObject InstantiatedGameObject;
         public T Binder;
+        public RectTransform RectTransform;
+        public bool IsDestroyed;
     }
 }

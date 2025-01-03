@@ -79,7 +79,7 @@ public class Launcher : MonoBehaviour {
         
         YooAssets.SetDefaultPackage(defaultPackage);
 
-        var assetHandle = YooAssets.LoadAssetAsync<GameObject>("Assets/UIDocument/Res/UIDocument.prefab");
+        var assetHandle = YooAssets.LoadAssetAsync<GameObject>("Assets/UIDocument/Res/Misc/UIDocument.prefab");
         yield return assetHandle;
 
         var instantiateOperation = assetHandle.InstantiateAsync();

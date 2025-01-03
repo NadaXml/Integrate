@@ -29,16 +29,8 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/UIDocument/Res
-        CollectorGUID: e08d0fbcf6c2aa445889e289329ea5a8
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackSeparately
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/UIDocument/Dep/AtlasPng
-        CollectorGUID: 8af64ba8c6f7d3547a3ed10515df1506
+      - CollectPath: Assets/UIDocument/Res/Misc
+        CollectorGUID: 38812308d734dff47ace995ede994337
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackSeparately
@@ -50,6 +42,14 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackSeparately
+        FilterRuleName: CollectScene
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/UIDocument/Res/SpriteAtlas
+        CollectorGUID: 647823e95b6b5ed41997a2fd2bdeabd6
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 

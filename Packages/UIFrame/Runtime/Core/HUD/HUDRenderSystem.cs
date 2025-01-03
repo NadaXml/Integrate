@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
@@ -25,7 +26,10 @@ namespace Core.HUD {
         }
         
         public void Update() {
-  
+            // billboard hud
+            Transform transform1 = _root.transform;
+            transform1.rotation = Quaternion.Euler(_uiCamera.transform.eulerAngles);
+            
             UpdateBillboard();
         }
 
@@ -64,37 +68,42 @@ namespace Core.HUD {
         }
 
         async void RenderHUDImp() {
+            int index = 0;
             foreach (var hud in huds) {
                 GameObject go = hud.Asset.InstantiatedGameObject;
                 if (go == null) {
                     await hud.Asset.AssetHandle.Task;
                     go = hud.Asset.AssetHandle.InstantiateSync();
+                    await UniTask.DelayFrame(1);
+
+                    if (hud.Asset.IsDestroyed) {
+                        Object.Destroy(go);
+                        continue;
+                    }
+                    go.transform.SetParent(_root.transform, false);
+                    go.transform.localPosition = Vector3.zero;
                     HUDAssetComponent<T> asset = hud.Asset;
                     asset.InstantiatedGameObject = go;
                     asset.Binder = go.GetComponent<T>();
+                    asset.RectTransform = go.GetComponent<RectTransform>();
                     hud.Asset = asset;
-                    go.transform.localPosition = Vector3.zero;
-                    go.transform.SetParent(_root.transform, false);
+
+                    if (asset.Binder is HUDBinderCanvas) {
+                        HUDBinderCanvas binder = asset.Binder as HUDBinderCanvas;
+                        binder.job.text = hud.Component.Job;
+                        binder.name.text = hud.Component.Name;
+                    } else if (asset.Binder is HUDBinder) {
+                        HUDBinder binder = asset.Binder as HUDBinder;
+                        binder.job.text = hud.Component.Job;
+                        binder.name.text = hud.Component.Name;
+                    }
+                    index++;
                 }
             }
         }
         
         void UpdateHUD(T hudBinder) {
-            
-            Transform transform = hudBinder.transform;
-            // billboard hud
-            transform.rotation = Quaternion.Euler(_uiCamera.transform.eulerAngles);
-
             // scale hud 没用模版测试，为了3d遮挡关联，通过scale和distance，控制大小
-
-            var distance = (transform.position - _uiCamera.transform.position).magnitude;
-            var scale = distance / 23f * 1.5f * 1.5f;
-            scale = scale > 3f ? 2.3f : scale;
-            var scaleV3 = new Vector3(
-                scale / transform.lossyScale.x * transform.localScale.x, 
-                scale / transform.lossyScale.y * transform.localScale.y,
-                scale / transform.lossyScale.z * transform.localScale.z);
-            transform.localScale = scaleV3;
         }
         
     }  

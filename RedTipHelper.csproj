@@ -41,19 +41,19 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipService.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipSchedule.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\IRedTipSchedule.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\IRedTipService.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipBase.cs" />
-    <Compile Include="Packages\RedTipHelper\Runtime\Core\ILifecycle.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\IService.cs" />
-    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipCalcDict.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\IRedTipContext.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\IRedTipCalc.cs" />
-    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipCalcRefOther.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Config\RedTipConfig.cs" />
     <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipCalcDefault.cs" />
+    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipService.cs" />
+    <Compile Include="Packages\RedTipHelper\Runtime\Core\ILifecycle.cs" />
+    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipCalcDict.cs" />
+    <Compile Include="Packages\RedTipHelper\Runtime\Core\RedTipCalcRefOther.cs" />
     <None Include="Packages\RedTipHelper\Runtime\RedTipHelper.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>D:\OtherUnity\2021.3.44f1c1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

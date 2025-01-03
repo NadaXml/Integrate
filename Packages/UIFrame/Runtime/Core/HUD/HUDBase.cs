@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine;
 namespace Core.HUD {
     public class HUDBase<T> : IHUD<T> where T : MonoBehaviour {
@@ -30,7 +31,19 @@ namespace Core.HUD {
         }
         public void Release() {
             Asset.AssetHandle?.Release();
-            Asset = default;
+            Asset = new HUDAssetComponent<T>() {
+                IsDestroyed = true
+            };
+
+            if (Asset.InstantiatedGameObject != null) {
+                if (this is HUDBase<HUDBinderCanvas>) {
+                    HUDBinderCanvas hud = Asset.Binder as HUDBinderCanvas;
+                    hud.DetachFromImageCanvas();
+                    hud.DetachFromTextCanvas();
+                }
+                // 可以支持pool
+                GameObject.Destroy(Asset.InstantiatedGameObject);
+            }
         }
     }
 }

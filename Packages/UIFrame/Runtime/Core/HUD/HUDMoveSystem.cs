@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using LitMotion;
 using LitMotion.Extensions;
 using System;
@@ -8,12 +9,14 @@ namespace Core.HUD {
     public class HUDMoveSystem<T> where T : MonoBehaviour {
 
         List<IHUD<T>> _huds;
+        Camera _uiCamera;
         
         public Func<Vector3> RandomEndPosition;
         
-        public HUDMoveSystem(IEnumerable<IHUD<T>> huds) {
+        public HUDMoveSystem(IEnumerable<IHUD<T>> huds, Camera uiCamera) {
             _huds = new List<IHUD<T>>(huds);
             _huds.AddRange(huds);
+            _uiCamera = uiCamera;
         }
         
         public void Awake() {
@@ -45,6 +48,7 @@ namespace Core.HUD {
 
         async void AppendRandomMove(IHUD<T> hud) {
             await hud.Asset.AssetHandle.Task;
+            await UniTask.WaitUntil(() => hud.Asset.InstantiatedGameObject != null);
 
             hud.Random = new HUDRandomComponent() {
                 State = HUDRandomComponent.RandomState.Again,
@@ -54,19 +58,37 @@ namespace Core.HUD {
 
         void DoUpdateMove(IHUD<T> hud) {
             if (hud.Random.State == HUDRandomComponent.RandomState.Again) {
-                var handle = LMotion.Create(hud.Asset.InstantiatedGameObject.transform.position, hud.Random.EndPosition, 3f)
-                    .WithScheduler(MotionScheduler.Update)
+                Vector3 se = Vector3.zero;
+                if (hud is HUDBase<HUDBinder>) {
+                    se = hud.Asset.InstantiatedGameObject.transform.position;
+                } else if (hud is HUDBase<HUDBinderCanvas>) {
+                    se = hud.Asset.RectTransform.anchoredPosition;
+                }
+                
+                var handle1 = LMotion.Create(se, hud.Random.EndPosition, 3f)
                     .WithOnComplete(() => {
                         hud.Random = new HUDRandomComponent() {
                             State = HUDRandomComponent.RandomState.Again,
                             EndPosition = RandomEndPosition()
                         };
-                    })
-                    .BindToPosition(hud.Asset.InstantiatedGameObject.transform)
-                    .AddTo(hud.Asset.InstantiatedGameObject);
+                    });
+
+                MotionHandle handle2 = default;
+                if (hud is HUDBase<HUDBinder>) {
+                    handle2 = handle1
+                        .BindToPosition(hud.Asset.InstantiatedGameObject.transform)
+                        .AddTo(hud.Asset.InstantiatedGameObject);
+                } else if (hud is HUDBase<HUDBinderCanvas>) {
+                    handle2 = handle1
+                        .Bind(x => {
+                            hud.Asset.RectTransform.anchoredPosition = x;
+                        })
+                        .AddTo(hud.Asset.InstantiatedGameObject);
+                }
+            
                 hud.Random = new HUDRandomComponent() {
                     State = HUDRandomComponent.RandomState.Doing,
-                    Handle = handle
+                    Handle = handle2
                 };
             }
         }

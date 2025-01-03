@@ -41,13 +41,13 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Packages\RedTipHelper\Editor\TreeViewWithTreeModel.cs" />
+    <Compile Include="Packages\RedTipHelper\Editor\TreeDataModel\TreeElementUtility.cs" />
+    <Compile Include="Packages\RedTipHelper\Editor\RedTipDebugView.cs" />
     <Compile Include="Packages\RedTipHelper\Editor\TreeDataModel\TreeElement.cs" />
     <Compile Include="Packages\RedTipHelper\Editor\TreeDataModel\TreeModel.cs" />
     <Compile Include="Packages\RedTipHelper\Editor\RedTipDebugWindow.cs" />
-    <Compile Include="Packages\RedTipHelper\Editor\TreeViewWithTreeModel.cs" />
-    <Compile Include="Packages\RedTipHelper\Editor\TreeDataModel\TreeElementUtility.cs" />
     <Compile Include="Packages\RedTipHelper\Editor\RedTipTreeElement.cs" />
-    <Compile Include="Packages\RedTipHelper\Editor\RedTipDebugView.cs" />
     <None Include="Packages\RedTipHelper\Editor\RedTipDebug.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>D:\OtherUnity\2021.3.44f1c1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
@@ -736,11 +736,11 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>E:\fork\Integrate\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>E:\fork\Integrate\Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>E:\fork\Integrate\Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>E:\fork\Integrate\Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
