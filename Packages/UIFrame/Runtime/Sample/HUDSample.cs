@@ -13,7 +13,7 @@ namespace Sample {
 
         public float hudDistance;
 
-        int hudCount = 5; 
+        int hudCount = 10; 
 
         void Awake() {
             
@@ -23,8 +23,8 @@ namespace Sample {
             Application.targetFrameRate = 60;
             // CreateSystem();
             // CreateSystemCanvas();
-            // CreateSystemCanvasMulti();
-            CreateSystemMulti();
+            CreateSystemCanvasMulti();
+            // CreateSystemMulti();
         }
 
         void Update() {
@@ -57,6 +57,8 @@ namespace Sample {
             
             _hudCanvasDistanceOrderSystem?.Destroy();
             _hudDistanceOrderSystem?.Destroy();
+            
+            _hudStencilOrderSystem?.Destroy();
         }
 
         HUDRenderSystem<HUDBinder> _hudRenderSystem;
@@ -73,6 +75,8 @@ namespace Sample {
         
         HUDDistanceOrder<HUDBinderCanvas> _hudCanvasDistanceOrderSystem;
         HUDDistanceOrder<HUDBinder> _hudDistanceOrderSystem;
+        
+        HUDStencilOrderSystem<HUDBinder> _hudStencilOrderSystem;
 
         void CreateSystem() {
             _hudRenderSystem = new HUDRenderSystem<HUDBinder>(Canvas, Root, UICamera);
@@ -158,22 +162,25 @@ namespace Sample {
                 createParams[i].Component = new HUDComponent() {
                     Hp = 30f,
                     Name = $"name{i}",
-                    Job = $"job1{i}",
+                    Job = $"job{i}",
                     PrefabName = "Assets/UIDocument/Res/Misc/HUDUI.prefab"
                 };
             }
             _hudRenderSystem.CreateHUD(createParams);
             _hudRenderSystem.RenderHUD();
             
-            _hudSeparateSystem = new HUDSeparateSystem<HUDBinder>(_hudRenderSystem.huds, this.Canvas);
+            _hudSeparateSystem = new HUDSeparateSystem<HUDBinder>(_hudRenderSystem.huds, UICamera);
             _hudSeparateSystem.SeparateHUDCanvas();
 
             _hudDistanceOrderSystem = new HUDDistanceOrder<HUDBinder>(_hudRenderSystem.huds, UICamera);
             _hudDistanceOrderSystem.DistanceOrder();
 
+            // _hudStencilOrderSystem = new HUDStencilOrderSystem<HUDBinder>(_hudRenderSystem.huds, UICamera);
+            // _hudStencilOrderSystem.StencilOrder();
+            
             _hudMoveMultiSystem = new HUDMoveSystemMulti<HUDBinder>(_hudRenderSystem.huds, UICamera);
             _hudMoveMultiSystem.Awake();
-            _hudMoveMultiSystem.RandomEndPosition = () => new Vector3(Random.Range(-50f, 50f), 0, Random.Range(-50f, 50f));
+            _hudMoveMultiSystem.RandomEndPosition = () => new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f), 0f);
             
             _hudMoveMultiSystem.CreateRandomMove();
         }

@@ -18,9 +18,9 @@ MonoBehaviour:
   Packages:
   - PackageName: DefaultPackage
     PackageDesc: 
-    EnableAddressable: 0
+    EnableAddressable: 1
     LocationToLower: 0
-    IncludeAssetGUID: 0
+    IncludeAssetGUID: 1
     IgnoreDefaultType: 1
     AutoCollectShaders: 1
     Groups:
@@ -29,20 +29,12 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/UIDocument/Res/Misc
-        CollectorGUID: 38812308d734dff47ace995ede994337
+      - CollectPath: Assets/UIDocument/Art/UIToolkitSetting
+        CollectorGUID: 0015609912d257445abb2f7be240cc22
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackSeparately
         FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/UIDocument/Scene
-        CollectorGUID: c18efa23fdfcc1e4b8b7abac8168279a
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackSeparately
-        FilterRuleName: CollectScene
         AssetTags: 
         UserData: 
       - CollectPath: Assets/UIDocument/Res/SpriteAtlas
@@ -51,5 +43,37 @@ MonoBehaviour:
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/UIDocument/Res/Scene
+        CollectorGUID: c18efa23fdfcc1e4b8b7abac8168279a
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackSeparately
+        FilterRuleName: CollectScene
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/UIDocument/Res/UIPrefab
+        CollectorGUID: 38812308d734dff47ace995ede994337
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackSeparately
+        FilterRuleName: CollectPrefab
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/UIDocument/Res/UIUxml
+        CollectorGUID: ddbbb17f418b24149ba4c28cb83a4f56
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackSeparately
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/UIDocument/Art/UISprite
+        CollectorGUID: 3522414806ae2e9479394742087e2473
+        CollectorType: 1
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectSprite
         AssetTags: 
         UserData: 

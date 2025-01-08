@@ -17,6 +17,12 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.lxm.appframe": {
+      "version": "file:AppFrame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.lxm.redtiphelper": {
       "version": "file:RedTipHelper",
       "depth": 0,

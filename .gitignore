@@ -10,3 +10,5 @@ BuildResult
 UserSettings
 Release
 Assets/StreamingAssets
+Assets/StreamingAssets.meta
+UIElementsSchema

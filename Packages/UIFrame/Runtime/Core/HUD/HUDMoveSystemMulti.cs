@@ -1,3 +1,4 @@
+using AppFrame;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
@@ -63,9 +64,9 @@ namespace Core.HUD {
                             hud.Random = random;
                         })
                         .Bind(x => {
-                            binder.job.transform.localPosition = x + new Vector3(0f, 10.7f, hud.Random.Distance);
-                            binder.name.transform.localPosition = x + new Vector3(0f, -9.5f, hud.Random.Distance); 
-                            binder.hp.transform.localPosition = x + new Vector3(0f, -1.4f, hud.Random.Distance);
+                            binder.job.transform.localPosition = x + new Vector3(0f, 10.7f, binder.job.transform.localPosition.z);
+                            binder.name.transform.localPosition = x + new Vector3(0f, -9.5f, binder.name.transform.localPosition.z); 
+                            binder.hp.transform.localPosition = x + new Vector3(0f, -1.4f, binder.hp.transform.localPosition.z);
                         })
                         .AddTo(hud.Asset.InstantiatedGameObject);
 

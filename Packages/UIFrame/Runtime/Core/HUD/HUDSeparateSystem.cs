@@ -1,6 +1,8 @@
+using AppFrame;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 namespace Core.HUD {
     public class HUDSeparateSystem<T> : ISystem 
         where T : MonoBehaviour {
@@ -10,10 +12,10 @@ namespace Core.HUD {
         }
         public void Update() {
             if (_canvasText != null) {
-                _canvasText.transform.rotation = _root.transform.rotation;
+                _canvasText.transform.rotation = _uiCamera.transform.rotation;
             }
             if (_canvasImage != null) {
-                _canvasImage.transform.rotation = _root.transform.rotation;
+                _canvasImage.transform.rotation = _uiCamera.transform.rotation;
             }
         }
         public void Destroy() {
@@ -22,14 +24,14 @@ namespace Core.HUD {
 
         public List<IHUD<T>> _huds;
 
-        Canvas _root;
+        Camera _uiCamera;
         GameObject _canvasText;
         GameObject _canvasImage;
 
-        public HUDSeparateSystem(IEnumerable<IHUD<T>> huds, Canvas root) {
+        public HUDSeparateSystem(IEnumerable<IHUD<T>> huds, Camera uiCamera) {
             _huds = new List<IHUD<T>>();
             _huds.AddRange(huds);
-            _root = root;
+            _uiCamera = uiCamera;
         }
         
         public void SeparateHUDCanvas() {
@@ -43,14 +45,18 @@ namespace Core.HUD {
             if (_canvasText == null) {
                 _canvasText = new GameObject();
                 Object.DontDestroyOnLoad(_canvasText);
-                _canvasText.transform.position = _root.transform.position;
-                _canvasText.transform.rotation = _root.transform.rotation;
+                _canvasText.transform.position = Vector3.zero;
+                _canvasText.transform.rotation = Quaternion.identity;
+                var sortingGroup = _canvasText.AddComponent<SortingGroup>();
+                sortingGroup.sortingOrder = 2;
             }
             if (_canvasImage == null) {
                 _canvasImage = new GameObject();
                 Object.DontDestroyOnLoad(_canvasImage);
-                _canvasImage.transform.position = _root.transform.position;
-                _canvasImage.transform.rotation = _root.transform.rotation;
+                _canvasImage.transform.position = Vector3.zero;
+                _canvasImage.transform.rotation = Quaternion.identity;
+                var sortingGroup = _canvasImage.AddComponent<SortingGroup>();
+                sortingGroup.sortingOrder = 1;
             }
         }
         
