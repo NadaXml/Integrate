@@ -1,5 +1,5 @@
 namespace UIFrame.Core {
-    public class UIService {
+    public interface IAssetProvider {
         
     }
 }

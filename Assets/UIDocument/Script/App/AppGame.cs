@@ -1,86 +1,70 @@
 using AppFrame;
-using UIFrame.Core;
-using Cysharp.Threading.Tasks;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using UIDocument.Script.Module;
 using UIDocument.Script.Service;
 using UIDocument.Script.System;
-using UnityEngine;
+using UIFrame.Core;
 using YooAsset;
-using IServiceProvider = AppFrame.IServiceProvider;
-using NotImplementedException = System.NotImplementedException;
 
 namespace UIDocument.Script.App {
-    public class AppGame : IApp, IServiceProvider
+    public class AppGame : IApp
     {
-        public enum ServiceType {
-            Asset = 0,
-            Scene = 1,
-            UI = 2,
-        }
-
-        public enum SystemType {
-            UI = 0,
-        }
-
-        Dictionary<int, IService> _services;
-        Dictionary<int, ISystem> _systems;
+        List<IService> _services;
+        List<ISystem> _systems;
 
         AppContext _appContext;
         
         EPlayMode _playMode = EPlayMode.OfflinePlayMode;
         
+        StartUp _startUp;
+        
         public void Awake() {
-            _services = new Dictionary<int, IService>();
-            _systems = new Dictionary<int, ISystem>();
+            _services = new List<IService>();
+            _systems = new List<ISystem>();
             _appContext = new AppContext();
             _appContext.ServiceContext = new ServiceContext();
-            _appContext.SystemContext = new SystemContext(this);
+            _appContext.SystemContext = new SystemContext();
         }
         public void Destroy() {
-            foreach (var pair in _services) {
-                pair.Value.Destroy();
+            foreach (IService service in _services) {
+                service.Destroy();
             }
+            _services.Clear();
+
+            foreach (ISystem system in _systems) {
+                system.Destroy();
+            }
+            _systems.Clear();
         }
         public IEnumerator Start() {
-            IService service = new AssetService.AssetService("DefaultPackage", _playMode);
-            yield return service.Start();
-            _services.Add((int)ServiceType.Asset, service);
+            
+            // 初始化服务
+            AssetService.AssetService assetService = new AssetService.AssetService("DefaultPackage", _playMode);
+            yield return assetService.Start();
+            _services.Add(assetService);
 
-            service = new SceneService.SceneService();
-            yield return service.Start();
-            _services.Add((int)ServiceType.Scene, service);
-            
-            // ISystem system = new UISystem(this);
-            // yield return system.Start();
-            // _systems.Add((int)SystemType.UI, system);
+            SceneService.SceneService sceneService = new SceneService.SceneService();
+            yield return sceneService.Start();
+            _services.Add(sceneService);
+
+            UISystem.CrateParam uiCreateParam = new UISystem.CrateParam() {
+                _assetProvider = assetService
+            };
+            // 初始化系统
+            ISystem uiSystem = new UISystem(in uiCreateParam);
+            yield return uiSystem.Start();
+            _systems.Add(uiSystem);
+
+            var createParam = new StartUp.CreateParam();
+            _startUp = new StartUp(in createParam);
         }
-        public async void Play() {
-            IService service;
-            _services.TryGetValue((int)ServiceType.Scene, out service);
-            ISystem system;
-            _systems.TryGetValue((int)SystemType.UI, out system);
-            
-            // UISystem uiSystem = system as UISystem;
-            
-            SceneService.SceneService sceneService = service as SceneService.SceneService;
-            await sceneService.LoadSceneAsync(_appContext.ServiceContext, "HUD.unity").ToUniTask();
-            Debug.Log("场景加载成功");
-            
+        public void Play() {
+            _startUp.Play();
         }
 
         public void SetPlayMode(EPlayMode playMode) {
             _playMode = playMode;
-        }
-        
-        public T GetService<T>(int serviceType) where T : class, IService {
-            _services.TryGetValue(serviceType, out IService service);
-            return service as T;
-        }
-        public T GetSystem<T>(int systemType) where T : class, ISystem {
-            _systems.TryGetValue(systemType, out ISystem system);
-            return system as T;
         }
     }
 }

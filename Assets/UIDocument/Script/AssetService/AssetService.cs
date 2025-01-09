@@ -1,10 +1,11 @@
 using YooAsset;
 using AppFrame;
 using System.Collections;
+using UIFrame.Core;
 using UnityEngine;
 
 namespace UIDocument.Script.AssetService {
-    public class AssetService : IService {
+    public class AssetService : IService, IAssetProvider {
 
         string _packageName;
         EPlayMode _playMode = EPlayMode.OfflinePlayMode;
