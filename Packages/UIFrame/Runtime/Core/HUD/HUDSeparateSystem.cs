@@ -1,5 +1,6 @@
 using AppFrame;
 using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -20,6 +21,9 @@ namespace Core.HUD {
         }
         public void Destroy() {
             // throw new System.NotImplementedException();
+        }
+        public IEnumerator Start() {
+            throw new System.NotImplementedException();
         }
 
         public List<IHUD<T>> _huds;

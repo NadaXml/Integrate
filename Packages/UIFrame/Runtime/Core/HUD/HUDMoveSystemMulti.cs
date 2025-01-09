@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LitMotion;
 using LitMotion.Extensions;
+using System.Collections;
 using Random = UnityEngine.Random;
 
 namespace Core.HUD {
@@ -21,6 +22,9 @@ namespace Core.HUD {
         }
         public void Destroy() {
             // throw new System.NotImplementedException();
+        }
+        public IEnumerator Start() {
+            throw new NotImplementedException();
         }
 
         List<IHUD<T>> _huds;

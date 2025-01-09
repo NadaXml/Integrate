@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using LitMotion;
 using LitMotion.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -30,7 +31,10 @@ namespace Core.HUD {
             }
             _huds.Clear();
         }
-        
+        public IEnumerator Start() {
+            throw new NotImplementedException();
+        }
+
         List<IHUD<T>> _huds;
         public Func<Vector3> RandomEndPosition;
         Camera _uiCamera;

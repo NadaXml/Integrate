@@ -1,6 +1,6 @@
 {
-    "name": "UIFrameRuntime",
-    "rootNamespace": "",
+    "name": "UIFrame",
+    "rootNamespace": "UIFrame",
     "references": [
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:e34a5702dd353724aa315fb8011f08c3",
