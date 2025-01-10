@@ -21,10 +21,8 @@ namespace UIDocument.Script.SceneService {
             yield return null;
         }
         
-        public IEnumerator LoadSceneAsync(IServiceContext context, string sceneName) {
-            var assetHandle = YooAssets.LoadSceneAsync(sceneName);
-            context.SetHandleObject(SceneLoading, assetHandle);
-            yield return assetHandle;
+        public SceneHandle LoadSceneAsync(string sceneName) {
+            return YooAssets.LoadSceneAsync(sceneName);
         }
     }
 }

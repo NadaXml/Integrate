@@ -1,33 +1,45 @@
+using AppFrame;
 using Cysharp.Threading.Tasks;
 using UIDocument.Script.App;
 using UIFrame.Core;
+using Unity.VisualScripting;
 using UnityEngine;
+using YooAsset;
 namespace UIDocument.Script.Module {
     public class StartUp {
-
-        public struct CreateParam {
-            public Provider Provider;
-            public AppContext AppContext;
-        }
-
-        public struct Provider {
+        
+        public class Context : IContext {
             public UISystem UISystem;
             public SceneService.SceneService SceneService;
         }
-
-        Provider _provider;
+        
+        public struct CreateParam {
+            public StartUp.Context StartUpContext;
+            public AppContext AppContext;
+        }
+        
+        Context _startUpContext;
         AppContext _appContext;
         
         public StartUp(in CreateParam createParam) {
-            _provider = createParam.Provider;
+            _startUpContext = createParam.StartUpContext;
             _appContext = createParam.AppContext;
         }
 
         public async void Play() {
-            // UISystem uiSystem = system as UISystem;;
+            CreateLoadingStartUp();
             
-            await _provider.SceneService.LoadSceneAsync(_appContext.ServiceContext, "HUD.unity").ToUniTask();
+            SceneHandle sceneHandle = _startUpContext.SceneService.LoadSceneAsync("HUD.unity");
+            await sceneHandle.ToUniTask();
             Debug.Log("场景加载成功");
+        }
+
+        public void CreateLoadingStartUp() {
+            LoadingPresenter presenter = new LoadingPresenter(_startUpContext);
+            LoadingView loadingView = new LoadingView(_startUpContext);
+            LoadingModel loadingModel = new LoadingModel(_startUpContext);
+            presenter.Bind(loadingView, loadingModel);
+            
         }
     }
 }

@@ -1,8 +1,8 @@
 using AppFrame;
 using System.Collections;
-namespace UIFrame.Core {
-    public class UISystem : ISystem {
-
+using YooAsset;
+namespace UIDocument.Script.DataSystem {
+    public class DataSystem : ISystem {
         public void Awake() {
             throw new System.NotImplementedException();
         }
@@ -13,14 +13,20 @@ namespace UIFrame.Core {
             throw new System.NotImplementedException();
         }
 
-        public struct CrateParam {
-            public IAssetProvider _assetProvider;
+        void SetSceneHandle(string name, SceneHandle sceneHandle) {
+            
+        }
+        
+        void GetSceneHandle() {
+            
         }
 
-        IAssetProvider _assetProvider;
-        
-        public UISystem(in UISystem.CrateParam createParam) {
-            _assetProvider = createParam._assetProvider;
+        void SetUniTask() {
+            
+        }
+
+        void GetUniTask() {
+            
         }
     }
 }

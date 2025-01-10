@@ -2,8 +2,6 @@ using AppFrame;
 using System.Collections;
 using System.Collections.Generic;
 using UIDocument.Script.Module;
-using UIDocument.Script.Service;
-using UIDocument.Script.System;
 using UIFrame.Core;
 using YooAsset;
 
@@ -12,10 +10,10 @@ namespace UIDocument.Script.App {
     {
         List<IService> _services;
         List<ISystem> _systems;
-
-        AppContext _appContext;
         
         EPlayMode _playMode = EPlayMode.OfflinePlayMode;
+
+        AppContext _appContext;
         
         StartUp _startUp;
         
@@ -23,8 +21,6 @@ namespace UIDocument.Script.App {
             _services = new List<IService>();
             _systems = new List<ISystem>();
             _appContext = new AppContext();
-            _appContext.ServiceContext = new ServiceContext();
-            _appContext.SystemContext = new SystemContext();
         }
         public void Destroy() {
             foreach (IService service in _services) {
