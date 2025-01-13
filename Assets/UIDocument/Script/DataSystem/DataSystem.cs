@@ -28,5 +28,8 @@ namespace UIDocument.Script.DataSystem {
         void GetUniTask() {
             
         }
+        public void Update(float deltaTime) {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -28,9 +28,8 @@ namespace UIDocument.Script.Launcher {
         }
 
         // Update is called once per frame
-        void Update()
-        {
-        
+        void Update() {
+            App.Update(Time.deltaTime);
         }
 
 

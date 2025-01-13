@@ -1,5 +1,6 @@
+using AppFrame;
 namespace UIFrame.Core {
-    public interface IPresenter<TView, TModel>
+    public interface IPresenter<TView, TModel> : IUpdater
         where TView : IView
         where TModel : IModel {
         TView View { get; }

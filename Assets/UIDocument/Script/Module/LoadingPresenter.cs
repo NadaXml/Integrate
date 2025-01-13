@@ -24,5 +24,8 @@ namespace UIDocument.Script.Module {
 
         public void UpdateProgress() {
         }
+        public void Update(float deltaTime) {
+            throw new System.NotImplementedException();
+        }
     }
 }

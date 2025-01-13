@@ -55,6 +55,10 @@ namespace UIDocument.Script.App {
             var createParam = new StartUp.CreateParam();
             _startUp = new StartUp(in createParam);
         }
+        public void Update(float deltaTime) {
+            _systems.ForEach(system => system.Update(deltaTime));
+        }
+        
         public void Play() {
             _startUp.Play();
         }

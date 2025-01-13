@@ -11,6 +11,7 @@ namespace UIDocument.Script.Module {
         public class Context : IContext {
             public UISystem UISystem;
             public SceneService.SceneService SceneService;
+            public SceneHandle loadingHandle;
         }
         
         public struct CreateParam {
@@ -30,6 +31,7 @@ namespace UIDocument.Script.Module {
             CreateLoadingStartUp();
             
             SceneHandle sceneHandle = _startUpContext.SceneService.LoadSceneAsync("HUD.unity");
+            _startUpContext.loadingHandle = sceneHandle;
             await sceneHandle.ToUniTask();
             Debug.Log("场景加载成功");
         }

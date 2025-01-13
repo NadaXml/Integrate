@@ -4,6 +4,7 @@ namespace UIDocument.Script.App {
         void Awake();
         void Destroy();
         IEnumerator Start();
+        void Update(float deltaTime);
 
         void Play();
     }

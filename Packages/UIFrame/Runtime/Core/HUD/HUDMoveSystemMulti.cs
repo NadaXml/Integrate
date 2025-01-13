@@ -95,5 +95,8 @@ namespace Core.HUD {
                 }
             }
         }
+        public void Update(float deltaTime) {
+            throw new NotImplementedException();
+        }
     }
 }
