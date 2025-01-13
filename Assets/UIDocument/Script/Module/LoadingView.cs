@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UIFrame.Core;
+using UIFrame.Core.UIComponent;
 using UnityEngine;
 namespace UIDocument.Script.Module {
     public class LoadingView : IView {
@@ -11,17 +12,49 @@ namespace UIDocument.Script.Module {
 
         public string RootAssetName;
         UISystem.HandleRes _RootHandle;
+        UITree _RootTree;
+
+        public struct UIComponentTemplate {
+            public Slider LoadingProgress;
+        }
         
         public void Awake() {
             
         }
+        
         public void Destroy() {
+            DestroyTemplate()
         }
+
+        UIComponentTemplate _componentTemplate;
         public Transform RootTransform
         {
             get {
                 return _RootHandle.GO.transform;
             }
+        }
+
+        public void BindTemplate(UITree template) {
+            Slider LoadingProgress = null;
+            // 可能需要排序，因为嵌套组件后置比较好
+            for (int i = 0; i < template.keys.Count; i++) {
+                var name = template.keys[i];
+                var uiComponent = template.sliders[i];
+                if (name == "LoadingProgress") {
+                    LoadingProgress = uiComponent;
+                }
+                uiComponent.Awake();
+            }
+            // 需要模拟所有权转移的情况
+            template.keys.Clear();
+            template.sliders.Clear();
+            _componentTemplate = new UIComponentTemplate() {
+                LoadingProgress = LoadingProgress,
+            };
+        }
+
+        public void DestroyTemplate() {
+            _componentTemplate.LoadingProgress?.Destroy();
         }
 
         async UniTask PrepareAsset() {
@@ -30,9 +63,11 @@ namespace UIDocument.Script.Module {
                 await assetHandle.ToUniTask();
                 _RootHandle = new UISystem.HandleRes() {
                     AssetHandle = assetHandle,
-                    GO = Object.Instantiate(assetHandle.AssetObject) as GameObject,
+                    GO = (GameObject)Object.Instantiate(assetHandle.AssetObject),
                 };
                 _context.UISystem.AddToRoot(this);
+                _RootTree = _RootHandle.GO.GetComponent<UITree>();
+                BindTemplate(_RootTree);
             }
         }
         
@@ -42,7 +77,7 @@ namespace UIDocument.Script.Module {
         }
 
         public void RenderProgress(float progress) {
-            
+            _componentTemplate.LoadingProgress.SetProgress(progress);
         }
     }
 }
