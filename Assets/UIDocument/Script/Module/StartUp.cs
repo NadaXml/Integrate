@@ -11,6 +11,7 @@ namespace UIDocument.Script.Module {
         public class Context : IContext {
             public UISystem UISystem;
             public SceneService.SceneService SceneService;
+            public AssetService.AssetService AssetService;
             public SceneHandle loadingHandle;
         }
         
@@ -22,6 +23,8 @@ namespace UIDocument.Script.Module {
         Context _startUpContext;
         AppContext _appContext;
         
+        LoadingPresenter _loadingPresenter;
+        
         public StartUp(in CreateParam createParam) {
             _startUpContext = createParam.StartUpContext;
             _appContext = createParam.AppContext;
@@ -29,19 +32,24 @@ namespace UIDocument.Script.Module {
 
         public async void Play() {
             CreateLoadingStartUp();
-            
             SceneHandle sceneHandle = _startUpContext.SceneService.LoadSceneAsync("HUD.unity");
             _startUpContext.loadingHandle = sceneHandle;
+            
             await sceneHandle.ToUniTask();
             Debug.Log("场景加载成功");
         }
 
-        public void CreateLoadingStartUp() {
+        public void Destroy() {
+            _startUpContext.UISystem.UnRegisterPresenter(_loadingPresenter);
+        }
+        
+        void CreateLoadingStartUp() {
             LoadingPresenter presenter = new LoadingPresenter(_startUpContext);
             LoadingView loadingView = new LoadingView(_startUpContext);
             LoadingModel loadingModel = new LoadingModel(_startUpContext);
             presenter.Bind(loadingView, loadingModel);
-            
+            _startUpContext.UISystem.RegisterPresenter(presenter);
+            _loadingPresenter = presenter;
         }
     }
 }

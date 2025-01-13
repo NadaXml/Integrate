@@ -23,6 +23,13 @@ namespace UIDocument.Script.App {
             _appContext = new AppContext();
         }
         public void Destroy() {
+            
+            _startUp.Destroy();
+            
+            if (_startUp != null) {
+                _startUp.Destroy();
+                _startUp = null;
+            } 
             foreach (IService service in _services) {
                 service.Destroy();
             }

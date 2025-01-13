@@ -11,6 +11,12 @@ namespace UIDocument.Script.Module {
             get;
             set;
         }
+        public void Awake() {
+            
+        }
+        public void Destroy() {
+            View.Destroy();
+        }
 
         StartUp.Context _context;
         public LoadingPresenter(StartUp.Context context) {
@@ -22,10 +28,19 @@ namespace UIDocument.Script.Module {
             Model = model;
         }
 
-        public void UpdateProgress() {
+        public void Render() {
+            View.Render();
         }
+        
         public void Update(float deltaTime) {
-            throw new System.NotImplementedException();
+            if (!_context.loadingHandle.IsValid) {
+                return;
+            }
+            if (_context.loadingHandle.IsDone) {
+                View.RenderProgress(1f);
+            } else {
+                View.RenderProgress(_context.loadingHandle.Progress);
+            }
         }
     }
 }

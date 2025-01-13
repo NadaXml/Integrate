@@ -18,6 +18,8 @@ namespace UIDocument.Script.AssetService {
         public void Awake() {
         }
         public void Destroy() {
+            YooAssets.DestroyPackage(_packageName);
+            YooAssets.Destroy();
         }
 
         public IEnumerator Start() {
@@ -89,6 +91,9 @@ namespace UIDocument.Script.AssetService {
             YooAssets.SetDefaultPackage(defaultPackage);
         
             Debug.Log("sample loaded");
+        }
+        public AssetHandle LoadAssetAsync(string assetName) {
+            return YooAssets.LoadAssetAsync<GameObject>(assetName);
         }
     }
 }
