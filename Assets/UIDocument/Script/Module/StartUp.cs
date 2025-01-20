@@ -10,7 +10,7 @@ namespace UIDocument.Script.Module {
         
         public class Context : IContext {
             public UISystem UISystem;
-            public SceneService.SceneService SceneService;
+            public SceneSystem.SceneSystem SceneSystem;
             public AssetService.AssetService AssetService;
             public SceneHandle loadingHandle;
         }
@@ -32,7 +32,10 @@ namespace UIDocument.Script.Module {
 
         public async void Play() {
             CreateLoadingStartUp();
-            SceneHandle sceneHandle = _startUpContext.SceneService.LoadSceneAsync("HUD.unity");
+
+            await UniTask.WaitUntil(()=>_loadingPresenter.View.IsRootOK);
+            
+            SceneHandle sceneHandle = _startUpContext.SceneSystem.LoadSceneAsync("Login");
             _startUpContext.loadingHandle = sceneHandle;
             
             await sceneHandle.ToUniTask();
@@ -40,6 +43,7 @@ namespace UIDocument.Script.Module {
         }
 
         public void Destroy() {
+            _loadingPresenter.Destroy();
             _startUpContext.UISystem.UnRegisterPresenter(_loadingPresenter);
         }
         
@@ -50,6 +54,7 @@ namespace UIDocument.Script.Module {
             presenter.Bind(loadingView, loadingModel);
             _startUpContext.UISystem.RegisterPresenter(presenter);
             _loadingPresenter = presenter;
+            _loadingPresenter.Render();
         }
     }
 }

@@ -44,22 +44,36 @@ namespace UIDocument.Script.App {
             
             // 初始化服务
             AssetService.AssetService assetService = new AssetService.AssetService("DefaultPackage", _playMode);
+            assetService.Awake();
             yield return assetService.Start();
             _services.Add(assetService);
 
-            SceneService.SceneService sceneService = new SceneService.SceneService();
-            yield return sceneService.Start();
-            _services.Add(sceneService);
+            SceneSystem.SceneSystem.CreateParameters sceneCreateParam = new SceneSystem.SceneSystem.CreateParameters() {
+                AssetService = assetService,
+            };
+            SceneSystem.SceneSystem sceneSystem = new SceneSystem.SceneSystem(in sceneCreateParam);
+            sceneSystem.Awake();
+            yield return sceneSystem.Start();
+            _systems.Add(sceneSystem);
 
             UISystem.CrateParam uiCreateParam = new UISystem.CrateParam() {
                 _assetProvider = assetService
             };
+            
             // 初始化系统
-            ISystem uiSystem = new UISystem(in uiCreateParam);
+            UISystem uiSystem = new UISystem(in uiCreateParam);
+            uiSystem.Awake();
             yield return uiSystem.Start();
             _systems.Add(uiSystem);
 
-            var createParam = new StartUp.CreateParam();
+            var createParam = new StartUp.CreateParam() {
+                StartUpContext = new StartUp.Context() {
+                    SceneSystem = sceneSystem,
+                    AssetService = assetService,
+                    UISystem = uiSystem
+                },
+                AppContext = _appContext
+            };
             _startUp = new StartUp(in createParam);
         }
         public void Update(float deltaTime) {

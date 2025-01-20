@@ -33,7 +33,10 @@ namespace UIDocument.Script.Module {
         }
         
         public void Update(float deltaTime) {
-            if (!_context.loadingHandle.IsValid) {
+            if (!(_context.loadingHandle is {IsValid: true})) {
+                return;
+            }
+            if (!View.IsRootOK) {
                 return;
             }
             if (_context.loadingHandle.IsDone) {

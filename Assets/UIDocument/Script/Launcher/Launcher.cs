@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UIDocument.Script.App;
 using UnityEngine;
+using UnityEngine.Rendering;
 using YooAsset;
 
 namespace UIDocument.Script.Launcher {
@@ -19,6 +20,8 @@ namespace UIDocument.Script.Launcher {
         IEnumerator Start() {
             DontDestroyOnLoad(gameObject);
 
+            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+            
             AppGame appGame = App as AppGame;
             appGame.SetPlayMode(PlayMode);
 
@@ -34,9 +37,6 @@ namespace UIDocument.Script.Launcher {
 
 
         void OnDestroy() {
-            // var package = YooAssets.GetPackage("DefaultPackage");
-            // package.ClearAllCacheFilesAsync()
-            
             App.Destroy();
         }
     }

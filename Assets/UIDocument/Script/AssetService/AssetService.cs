@@ -18,6 +18,10 @@ namespace UIDocument.Script.AssetService {
         public void Awake() {
         }
         public void Destroy() {
+            
+            var package = YooAssets.GetPackage(_packageName);
+            package.ClearAllCacheFilesAsync();
+            
             YooAssets.DestroyPackage(_packageName);
             YooAssets.Destroy();
         }
@@ -94,6 +98,10 @@ namespace UIDocument.Script.AssetService {
         }
         public AssetHandle LoadAssetAsync(string assetName) {
             return YooAssets.LoadAssetAsync<GameObject>(assetName);
+        }
+        
+        public SceneHandle LoadSceneAsync(string sceneName) {
+            return YooAssets.LoadSceneAsync(sceneName);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace UIFrame.Core {
             foreach (IPresenter<IView, IModel> presenter in _presenters) {
                 presenter.Destroy();
             }
+            _presenters.Clear();
         }
         public IEnumerator Start() {
             AssetHandle handle = _assetProvider.LoadAssetAsync("UIRoot");

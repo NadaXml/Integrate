@@ -10,7 +10,7 @@ namespace UIDocument.Script.Module {
             _context = context;
         }
 
-        public string RootAssetName;
+        public string RootAssetName = "Loading";
         UISystem.HandleRes _RootHandle;
         UITree _RootTree;
 
@@ -23,7 +23,8 @@ namespace UIDocument.Script.Module {
         }
         
         public void Destroy() {
-            DestroyTemplate()
+            DestroyTemplate();
+            _RootHandle.AssetHandle.Release();
         }
 
         UIComponentTemplate _componentTemplate;
@@ -31,6 +32,12 @@ namespace UIDocument.Script.Module {
         {
             get {
                 return _RootHandle.GO.transform;
+            }
+        }
+        public bool IsRootOK
+        {
+            get {
+                return _RootHandle.AssetHandle is {IsValid: true, IsDone: true};
             }
         }
 
@@ -51,8 +58,9 @@ namespace UIDocument.Script.Module {
             _componentTemplate = new UIComponentTemplate() {
                 LoadingProgress = LoadingProgress,
             };
+            
         }
-
+        
         public void DestroyTemplate() {
             _componentTemplate.LoadingProgress?.Destroy();
         }

@@ -4,5 +4,7 @@ namespace UIFrame.Core {
         void Awake();
         void Destroy();
         Transform RootTransform { get; }
+        
+        bool IsRootOK { get; }
     }
 }
