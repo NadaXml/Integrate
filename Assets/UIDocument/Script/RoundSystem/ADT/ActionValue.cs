@@ -1,7 +1,8 @@
+using AppFrame;
 using System;
 namespace UIDocument.Script.RoundSystem.ADT {
     [Serializable]
-    public struct ActionValue {
+    public struct ActionValue : IDumpable {
 
         /// <summary>
         /// 行动值：放大100倍的周期
@@ -79,6 +80,9 @@ namespace UIDocument.Script.RoundSystem.ADT {
 
         public bool IsPass() {
             return value <= 0;
+        }
+        public string Dump() {
+            return value.ToString();
         }
     }
 }

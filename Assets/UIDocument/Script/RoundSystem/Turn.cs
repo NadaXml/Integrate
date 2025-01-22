@@ -5,7 +5,7 @@ namespace UIDocument.Script.RoundSystem {
     /// <summary>
     /// 轮次
     /// </summary>
-    public struct Turn : IComponent {
+    public struct Turn : IComponent, IDumpable {
         /// <summary>
         /// 当前回合剩余行动值
         /// </summary>
@@ -26,46 +26,23 @@ namespace UIDocument.Script.RoundSystem {
         }
         
         #endregion
-        
+
         /// <summary>
         /// 对回合的行动值进行消耗
         /// </summary>
-        /// <param name="value"></param>
-        public void Forward(int value) {
-            _targetActionValue -= value;
+        public void Forward() {
+            _targetActionValue -= 1;
         }
 
         /// <summary>
-        /// 是否超过这个回合
+        /// 判断当前回合是否足够消耗行动值
         /// </summary>
-        /// <returns></returns>
-        public bool IsPassTurn() {
+        /// <returns>返回当前回合可以消耗的行动值</returns>
+        public bool CheckForward() {
             return _currentActionValue.IsPass();
         }
-
-        /// <summary>
-        /// 继承上一个回合不足以消耗完的行动值
-        /// </summary>
-        /// <param name="prevTurn"></param>
-        public void InheritPrevTurnValue(Turn prevTurn) {
-            if (!prevTurn.IsPassTurn()) {
-                return;
-            }
-            _currentActionValue -= prevTurn._currentActionValue;
-        }
-
-        /// <summary>
-        /// 回合行动
-        /// </summary>
-        /// <returns>回合可用的行动值</returns>
-        public ActionValue StepTurnActionValue() {
-            // 目标行动值小于当前行动值，回合进入行动
-            if (_currentActionValue <= _targetActionValue) {
-                return ActionValue.ZERO;
-            }
-            ActionValue delta = _currentActionValue - _targetActionValue;
-            _currentActionValue = _targetActionValue;
-            return delta;
+        public string Dump() {
+            return $"current is {_currentActionValue.value}, target is {_targetActionValue.value}";
         }
     }
 }
