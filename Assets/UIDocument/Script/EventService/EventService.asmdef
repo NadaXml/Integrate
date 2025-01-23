@@ -1,0 +1,4 @@
+{
+  "name": "EventService",
+  "references":[ "GUID:1e20554ebdff9cf4b8421f5f05d86cfd" ]
+}

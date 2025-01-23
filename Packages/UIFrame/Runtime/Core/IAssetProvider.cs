@@ -1,6 +1,6 @@
 using YooAsset;
 namespace UIFrame.Core {
     public interface IAssetProvider {
-        AssetHandle LoadAssetAsync(string assetName);
+        AssetHandle LoadAssetAsync<TObject>(string assetName) where TObject : UnityEngine.Object;
     }
 }

@@ -126,7 +126,6 @@ namespace Trie {
             var dict = TestInitB();
             StringBuilder nameBuilder = new StringBuilder();
             List<List<int>> results = new List<List<int>>();
-            int num = 0;
             Profiler.BeginSample("Test5");
             foreach (KeyValuePair<string,List<int>> valuePair in dict) {
                 if (valuePair.Key.StartsWith("火")) {

@@ -24,6 +24,7 @@ namespace UIDocument.Script.Module {
         
         public void Destroy() {
             DestroyTemplate();
+            GameObject.Destroy(_RootHandle.GO);
             _RootHandle.AssetHandle.Release();
         }
 
@@ -67,7 +68,7 @@ namespace UIDocument.Script.Module {
 
         async UniTask PrepareAsset() {
             if (_RootHandle.GO == null) {
-                var assetHandle = _context.AssetService.LoadAssetAsync(RootAssetName);
+                var assetHandle = _context.AssetService.LoadAssetAsync<GameObject>(RootAssetName);
                 await assetHandle.ToUniTask();
                 _RootHandle = new UISystem.HandleRes() {
                     AssetHandle = assetHandle,
@@ -79,7 +80,7 @@ namespace UIDocument.Script.Module {
             }
         }
         
-        public async UniTaskVoid Render() { 
+        public async void Render() { 
             await PrepareAsset();
             RenderProgress(0f);
         }

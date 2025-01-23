@@ -1,4 +1,5 @@
 using UIFrame.Core;
+using UnityEngine;
 namespace UIDocument.Script.Module {
     public class LoadingPresenter : IPresenter<LoadingView, LoadingModel> {
         public LoadingView View

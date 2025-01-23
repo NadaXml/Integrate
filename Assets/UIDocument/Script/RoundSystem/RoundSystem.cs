@@ -2,13 +2,18 @@ using AppFrame;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using UIDocument.Script.EventService;
 using UIDocument.Script.RoundSystem.ADT;
 using UIDocument.Script.RoundSystem.Config;
+using UnityEditor.MPE;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     public class RoundSystem : ISystem {
 
         public void Update(float deltaTime) {
+            
+            if(_roundContext.Status != RoundContext.RoundStatus.Running) return;
+            
             // 通过给定的帧率运行
             float loopTime = deltaTime + _timeRemainder;
             while (loopTime >= _frameRate) {
@@ -23,13 +28,23 @@ namespace UIDocument.Script.RoundSystem {
             }
         }
         public void Awake() {
-            
+            _eventServiceProvider.GetEventService().RegisterEvent("dump_round", OnDumpRound);
         }
         public void Destroy() {
-            
+            _eventServiceProvider.GetEventService().UnRegisterEvent("dump_round", OnDumpRound);
         }
         public IEnumerator Start() {
             yield return null;
+        }
+        
+        public struct CreateParam {
+            public EventService.EventServiceProvider EventServiceProvider;
+        }
+        
+        public RoundSystem(in CreateParam param) {
+            _eventServiceProvider = param.EventServiceProvider;
+            _roundContext.TurnIndex = 0;
+            _roundContext.Status = RoundContext.RoundStatus.None;
         }
         
         #region including def
@@ -72,8 +87,11 @@ namespace UIDocument.Script.RoundSystem {
         /// 当期行动值产生的行动者
         /// </summary>
         Queue<MoveComponent> _actionMoves = new Queue<MoveComponent>();
-        
 
+        SortedSet<MoveComponent> _testSortedMove = new SortedSet<MoveComponent>();
+        
+        EventService.EventServiceProvider _eventServiceProvider;
+        
         // 系统运行时间参数
         float _timeRemainder;
         float _frameRate;
@@ -97,6 +115,7 @@ namespace UIDocument.Script.RoundSystem {
             foreach (var moveConfig in config.moveComponentConfig) {
                 var moveComponent = MoveComponent.FromConfig(moveConfig);
                 _moveComponents.Add(moveComponent);
+                _testSortedMove.Add(moveComponent);
             }
 
             _roundContext.Status = RoundContext.RoundStatus.None;
@@ -104,14 +123,15 @@ namespace UIDocument.Script.RoundSystem {
 
             _frameRate = 1f/config.roundConfig.logicFrameRate;
         }
+        
+        public void StartSet() {
+            _roundContext.Status = RoundContext.RoundStatus.Running;
+        }
 
         /// <summary>
         /// 向前行动值运行
         /// </summary>
         void Step() {
-            
-            if(_roundContext.Status != RoundContext.RoundStatus.Running) return;
-
             // 校验回合合法
             int turnIndex = -1;
             for(int i = _roundContext.TurnIndex ; i < _turns.Count ; i++) {
@@ -162,12 +182,17 @@ namespace UIDocument.Script.RoundSystem {
             builder.AppendLine($"Round Context : {_roundContext.Dump()}");
             builder.AppendLine($"Round Total move : {DumpUtility.DumpList(_moveComponents)}");
             builder.AppendLine($"Round action move : {DumpUtility.DumpList(_actionMoves)}");
-            builder.AppendLine($"Round total trun : {DumpUtility.DumpList(_turns)}");
+            builder.AppendLine($"Round total turn : {DumpUtility.DumpList(_turns)}");
+            builder.AppendLine($"Round total test move : {DumpUtility.DumpList(_testSortedMove)}");
             Debug.Log(builder.ToString());
         }
 
         void DoAction(ref MoveComponent moveComponent) {
-            Debug.Log("pass one ");
+            Debug.Log($"do action {moveComponent.Dump()}");
+        }
+
+        void OnDumpRound(object sender, GameEventBase args) {
+            Debug.Log($"RoundSystem Dump : {_roundContext.Dump()}");
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Trie {
         }
 
         public Trie() {
-            Root = CreateNode<T>(Char.MinValue, null);
+            Root = CreateNode(Char.MinValue, null);
         }
 
         public ITrieNode<T> FindWithInsert(string str, T extraData = null) {
@@ -24,7 +24,7 @@ namespace Trie {
                     iterationNode = child;
                 }
                 else {
-                    iterationNode = CreateNode<T>(c, iterationNode);
+                    iterationNode = CreateNode(c, iterationNode);
                  
                 }
             }
@@ -60,7 +60,7 @@ namespace Trie {
             var iterationNode = Root;
             foreach (char c in str) {
                 if (!iterationNode.Children.TryGetValue(c, out var child)) {
-                    child = CreateNode<T>(c, iterationNode);
+                    child = CreateNode(c, iterationNode);
                     
                 }
                 iterationNode = child;
@@ -135,11 +135,11 @@ namespace Trie {
         [ItemCanBeNull]
         public IList<ITrieNode<T>> SearchIncludeTreeNode(string str) {
             // 创建搜索的子树
-            var findRoot = CreateNode<T>(Char.MinValue, null);
+            var findRoot = CreateNode(Char.MinValue, null);
             var iterationNode = findRoot;
             foreach (char c in str) {
                 if (!iterationNode.Children.TryGetValue(c, out var child)) {
-                    child = CreateNode<T>(c, iterationNode);
+                    child = CreateNode(c, iterationNode);
                 }
                 iterationNode = child;
             }
@@ -210,7 +210,7 @@ namespace Trie {
             return true;
         }
 
-        static ITrieNode<T> CreateNode<T>(char value, ITrieNode<T> parent) where T : class, IExtraData {
+        static ITrieNode<T> CreateNode(char value, ITrieNode<T> parent) {
             int depth = -1;
             if (parent != null) {
                 depth = parent.Depth + 1;

@@ -1,8 +1,8 @@
 using AppFrame;
 using Cysharp.Threading.Tasks;
 using UIDocument.Script.App;
+using UIDocument.Script.RoundSystem.Config;
 using UIFrame.Core;
-using Unity.VisualScripting;
 using UnityEngine;
 using YooAsset;
 namespace UIDocument.Script.Module {
@@ -12,6 +12,7 @@ namespace UIDocument.Script.Module {
             public UISystem UISystem;
             public SceneSystem.SceneSystem SceneSystem;
             public AssetService.AssetService AssetService;
+            public RoundSystem.RoundSystem RoundSystem;
             public SceneHandle loadingHandle;
         }
         
@@ -40,11 +41,24 @@ namespace UIDocument.Script.Module {
             
             await sceneHandle.ToUniTask();
             Debug.Log("场景加载成功");
+
+            // DestroyLoadingStartUp();
+            
+            AssetHandle handle = _startUpContext.AssetService.LoadAssetAsync<ScriptableObject>("BattleConfig");
+            await handle.ToUniTask();
+            
+            Debug.Log("加载Demo配置成功");
+            
+            BattleConfig roundConfig = handle.AssetObject as BattleConfig; 
+            if (roundConfig != null) {
+                _startUpContext.RoundSystem.CreateSet(in roundConfig);
+                _startUpContext.RoundSystem.StartSet();
+            }
+            handle.Release();
         }
 
         public void Destroy() {
-            _loadingPresenter.Destroy();
-            _startUpContext.UISystem.UnRegisterPresenter(_loadingPresenter);
+            DestroyLoadingStartUp();
         }
         
         void CreateLoadingStartUp() {
@@ -55,6 +69,16 @@ namespace UIDocument.Script.Module {
             _startUpContext.UISystem.RegisterPresenter(presenter);
             _loadingPresenter = presenter;
             _loadingPresenter.Render();
+        }
+
+        void DestroyLoadingStartUp() {
+            
+            Debug.Log("UI destroy");
+            if (_loadingPresenter != null) {
+                _loadingPresenter.Destroy();
+                _startUpContext.UISystem.UnRegisterPresenter(_loadingPresenter);
+                _loadingPresenter = null;
+            }
         }
     }
 }

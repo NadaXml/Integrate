@@ -23,7 +23,7 @@ namespace UIFrame.Core {
             _presenters.Clear();
         }
         public IEnumerator Start() {
-            AssetHandle handle = _assetProvider.LoadAssetAsync("UIRoot");
+            AssetHandle handle = _assetProvider.LoadAssetAsync<GameObject>("UIRoot");
             yield return handle;
             if (handle.Status == YooAsset.EOperationStatus.Succeed) {
                 GameObject go = Object.Instantiate(handle.AssetObject) as GameObject;

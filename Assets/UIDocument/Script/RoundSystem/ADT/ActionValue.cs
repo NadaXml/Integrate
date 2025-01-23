@@ -2,7 +2,16 @@ using AppFrame;
 using System;
 namespace UIDocument.Script.RoundSystem.ADT {
     [Serializable]
-    public struct ActionValue : IDumpable {
+    public struct ActionValue : IDumpable, IComparable<ActionValue>, IEquatable<ActionValue> {
+        public bool Equals(ActionValue other) {
+            return value == other.value;
+        }
+        public override bool Equals(object obj) {
+            return obj is ActionValue other && Equals(other);
+        }
+        public override int GetHashCode() {
+            return value;
+        }
 
         /// <summary>
         /// 行动值：放大100倍的周期
@@ -83,6 +92,9 @@ namespace UIDocument.Script.RoundSystem.ADT {
         }
         public string Dump() {
             return value.ToString();
+        }
+        public int CompareTo(ActionValue other) {
+            return value - other.value;
         }
     }
 }

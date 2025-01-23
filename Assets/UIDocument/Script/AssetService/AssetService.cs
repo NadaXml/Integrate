@@ -96,8 +96,8 @@ namespace UIDocument.Script.AssetService {
         
             Debug.Log("sample loaded");
         }
-        public AssetHandle LoadAssetAsync(string assetName) {
-            return YooAssets.LoadAssetAsync<GameObject>(assetName);
+        public AssetHandle LoadAssetAsync<TObject>(string assetName) where TObject : UnityEngine.Object {
+            return YooAssets.LoadAssetAsync<TObject>(assetName);
         }
         
         public SceneHandle LoadSceneAsync(string sceneName) {

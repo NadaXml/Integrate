@@ -39,7 +39,7 @@ namespace UIDocument.Script.RoundSystem {
         /// </summary>
         /// <returns>返回当前回合可以消耗的行动值</returns>
         public bool CheckForward() {
-            return _currentActionValue.IsPass();
+            return !_currentActionValue.IsPass();
         }
         public string Dump() {
             return $"current is {_currentActionValue.value}, target is {_targetActionValue.value}";

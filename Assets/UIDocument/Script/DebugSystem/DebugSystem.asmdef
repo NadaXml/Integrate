@@ -1,8 +1,9 @@
 {
-    "name": "RoundSystem",
+    "name": "DebugSystem",
     "rootNamespace": "",
     "references": [
         "GUID:1e20554ebdff9cf4b8421f5f05d86cfd",
+        "GUID:3de88c88fbbb8f944b9210d496af9762",
         "GUID:ecb86ca126b5490d95d3409e93d95132"
     ],
     "includePlatforms": [],
