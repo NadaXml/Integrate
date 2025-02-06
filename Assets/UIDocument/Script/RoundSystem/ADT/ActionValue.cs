@@ -10,7 +10,7 @@ namespace UIDocument.Script.RoundSystem.ADT {
             return obj is ActionValue other && Equals(other);
         }
         public override int GetHashCode() {
-            return value;
+            return value.GetHashCode();
         }
 
         /// <summary>

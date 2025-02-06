@@ -1,40 +1,53 @@
 using AppFrame;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UIDocument.Script.EventService;
-using UIDocument.Script.RoundSystem.ADT;
 using UIDocument.Script.RoundSystem.Config;
-using UnityEditor.MPE;
+using Unity.Collections;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     public class RoundSystem : ISystem {
+        
+        public void Awake() {
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.DumpRound, OnDumpRound);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.DumpRoundInspector, OnDumpInspector);
+        }
 
+        public void Destroy() {
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRound, OnDumpRound);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRoundInspector, OnDumpInspector);
+            _moveComponents.Dispose();
+        }
+        public IEnumerator Start() {
+            yield return null;
+        }
+        
         public void Update(float deltaTime) {
             
             if(_roundContext.Status != RoundContext.RoundStatus.Running) return;
             
             // 通过给定的帧率运行
             float loopTime = deltaTime + _timeRemainder;
-            while (loopTime >= _frameRate) {
-                
-                Step();
-                
-                loopTime -= _frameRate;
-                if (loopTime <= 0) {
-                    _timeRemainder = loopTime + _frameRate;
-                    break;
+            if (loopTime < _frameRate) {
+                _timeRemainder = _timeRemainder + deltaTime;
+            }
+            else {
+                while (loopTime >= _frameRate) {
+                    Step();
+                    loopTime -= _frameRate;
+                    if (loopTime <= 0) {
+                        _timeRemainder = loopTime + _frameRate;
+                        break;
+                    }
+                    if(_roundContext.Status != RoundContext.RoundStatus.Running) break;
+                }
+                if (loopTime > 0) {
+                    _timeRemainder += loopTime;
                 }
             }
-        }
-        public void Awake() {
-            _eventServiceProvider.GetEventService().RegisterEvent("dump_round", OnDumpRound);
-        }
-        public void Destroy() {
-            _eventServiceProvider.GetEventService().UnRegisterEvent("dump_round", OnDumpRound);
-        }
-        public IEnumerator Start() {
-            yield return null;
         }
         
         public struct CreateParam {
@@ -69,15 +82,16 @@ namespace UIDocument.Script.RoundSystem {
         #endregion
 
         #region field
-        
+
+
         /// <summary>
         /// 可移动者
         /// </summary>
-        List<MoveComponent> _moveComponents = new List<MoveComponent>(); 
+        NativeArray<MoveComponent> _moveComponents;
         /// <summary>
         /// 所有轮次
         /// </summary>
-        List<Turn> _turns = new List<Turn>();
+        NativeArray<Turn> _turns;
         /// <summary>
         /// 回合运行数据
         /// </summary>
@@ -103,18 +117,22 @@ namespace UIDocument.Script.RoundSystem {
         /// </summary>
         /// <param name="config"></param>
         public void CreateSet(in BattleConfig config) {
+            
             // 创建轮次
             var maxTurn = config.roundConfig.maxTurn;
+            _turns = new NativeArray<Turn>(maxTurn, Allocator.Persistent);
             for (int i = 0; i < maxTurn; i++) {
                 int turnActionValue = i == 0 ? config.roundConfig.firstActionValue.value : config.roundConfig.perActionValue.value;
                 Turn turn = Turn.FromMaxActionValue(turnActionValue);
-                _turns.Add(turn);
+                _turns[i] = turn;
             }
-            
+
+            _moveComponents = new NativeArray<MoveComponent>(config.moveComponentConfig.Count, Allocator.Persistent);
+            int index = 0;
             // 创建可移动者
             foreach (var moveConfig in config.moveComponentConfig) {
                 var moveComponent = MoveComponent.FromConfig(moveConfig);
-                _moveComponents.Add(moveComponent);
+                _moveComponents[index++] = moveComponent;
                 _testSortedMove.Add(moveComponent);
             }
 
@@ -134,7 +152,7 @@ namespace UIDocument.Script.RoundSystem {
         void Step() {
             // 校验回合合法
             int turnIndex = -1;
-            for(int i = _roundContext.TurnIndex ; i < _turns.Count ; i++) {
+            for(int i = _roundContext.TurnIndex ; i < _turns.Length ; i++) {
                 if (_turns[i].CheckForward()) {
                     turnIndex = i;
                     break;
@@ -148,14 +166,19 @@ namespace UIDocument.Script.RoundSystem {
             }
             
             // 行动者消耗行动值
-            foreach (var moveComponent in _moveComponents) {
-                moveComponent.Forward();
-                if (moveComponent.IsPass()) {
-                    _actionMoves.Enqueue(moveComponent);
+            for (int i = 0; i < _moveComponents.Length; i++) {
+                MoveComponent component = _moveComponents[i];
+                component.Forward();
+                if (component.IsPass()) {
+                    _actionMoves.Enqueue(component);
                 }
+                _moveComponents[i] = component;
             }
+            
             // 回合消耗行动值
-            _turns[turnIndex].Forward();
+            Turn turn = _turns[turnIndex];
+            turn.Forward();
+            _turns[turnIndex] = turn;
             
             // 结算行动
             if (_actionMoves.Count > 0) {
@@ -192,7 +215,20 @@ namespace UIDocument.Script.RoundSystem {
         }
 
         void OnDumpRound(object sender, GameEventBase args) {
-            Debug.Log($"RoundSystem Dump : {_roundContext.Dump()}");
+            Dump();
+        }
+        
+        void OnDumpInspector(object sender, GameEventBase e) {
+            FetchRoundInspector evt = e as FetchRoundInspector;
+            if (evt == null) {
+                return;
+            }
+            MoveComponentStream stream = new MoveComponentStream();
+            stream.MoveComponents = new List<MoveComponent>();
+            for (int i = 0; i < _moveComponents.Length; i++) {
+                stream.MoveComponents.Add(_moveComponents[i]);
+            }
+            evt.Result = JsonConvert.SerializeObject(stream);
         }
     }
 }

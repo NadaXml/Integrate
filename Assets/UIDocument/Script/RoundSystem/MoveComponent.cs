@@ -1,8 +1,15 @@
 using AppFrame;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UIDocument.Script.RoundSystem.ADT;
 using UIDocument.Script.RoundSystem.Config;
+using UnityEngine;
+using UnityEngine.Serialization;
+
 namespace UIDocument.Script.RoundSystem {
+    
+    [Serializable]
     /// <summary>
     /// 移动组件
     /// </summary>
@@ -10,55 +17,78 @@ namespace UIDocument.Script.RoundSystem {
         /// <summary>
         /// 当前行动值
         /// </summary>
-        ActionValue _currentAction;
-        
+        public ActionValue currentAction;
+
         /// <summary>
         /// 最大行动值
         /// </summary>
-        ActionValue _maxAction;
-        
+        public ActionValue maxAction;
+
         /// <summary>
         /// 速度
         /// </summary>
-        Speed _speed;
+        public Speed speed;
 
         /// <summary>
         /// 出站位置
         /// </summary>
-        int _position;
+        public int position;
 
         public static MoveComponent FromConfig(in MoveComponentConfig config) {
+            Speed s = Speed.FromValue(config.speed);
             return new MoveComponent() {
-                _currentAction = ActionValue.FromValue(config.speed),
-                _maxAction = ActionValue.FromValue(config.speed),
-                _speed = Speed.FromValue(config.speed),
-                _position = config.position
+                currentAction = ActionValue.FromSpeed(s),
+                maxAction = ActionValue.FromSpeed(s),
+                speed = s,
+                position = config.position
             };
         }
 
         public void Forward() {
-            _currentAction -= 1;
+            currentAction -= 1;
         }
 
         public bool IsPass() {
-            return _currentAction.IsPass();
+            return currentAction.IsPass();
         }
         public string Dump() {
-            return $"maxActoin is {_maxAction.Dump()}, currentAciton is {_currentAction.Dump()}, speed is {_speed.Dump()}";
+            return $"maxActoin is {maxAction.Dump()}, currentAciton is {currentAction.Dump()}, speed is {speed.Dump()}";
         }
         
         public int CompareTo(MoveComponent other) {
-            var a = _currentAction.CompareTo(other._currentAction);
+            var a = currentAction.CompareTo(other.currentAction);
             if (a == 0) {
-                return _position - other._position;
+                return position - other.position;
             }
             return a;
         }
         public bool Equals(MoveComponent other) {
-            return _position == other._position;
+            return position == other.position;
         }
         public override int GetHashCode() {
-            return HashCode.Combine(_currentAction, _maxAction, _speed, _position);
+            return HashCode.Combine(currentAction, maxAction, speed, position);
         }
+
+        public static string SerializeToString(in MoveComponent component) {
+            return JsonConvert.SerializeObject(component);
+        }
+        
+        public static MoveComponent DeSerializeFromString(string json) {
+            return JsonConvert.DeserializeObject<MoveComponent>(json);
+        }
+    }
+
+    [Serializable]
+    public struct MoveComponentStream {
+        public List<MoveComponent> MoveComponents;
+        
+        public static string SerializeToString(in MoveComponentStream component) {
+            return JsonConvert.SerializeObject(component);
+        }
+    
+        public static MoveComponentStream DeSerializeFromString(string json) {
+            return JsonConvert.DeserializeObject<MoveComponentStream>(json);
+        }
+        
     }
 }

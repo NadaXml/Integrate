@@ -41,6 +41,12 @@ namespace UIDocument.Script.RoundSystem {
         public bool CheckForward() {
             return !_currentActionValue.IsPass();
         }
+
+        public void Settle() {
+            _currentActionValue = _targetActionValue;
+            // TODO Other code
+        }
+        
         public string Dump() {
             return $"current is {_currentActionValue.value}, target is {_targetActionValue.value}";
         }
