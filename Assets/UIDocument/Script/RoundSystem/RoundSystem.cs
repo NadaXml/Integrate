@@ -7,6 +7,8 @@ using System.Text;
 using UIDocument.Script.EventService;
 using UIDocument.Script.RoundSystem.Config;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using UnityEditor;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     public class RoundSystem : ISystem {
@@ -20,6 +22,7 @@ namespace UIDocument.Script.RoundSystem {
             _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRound, OnDumpRound);
             _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRoundInspector, OnDumpInspector);
             _moveComponents.Dispose();
+            _turns.Dispose();
         }
         public IEnumerator Start() {
             yield return null;
@@ -32,7 +35,7 @@ namespace UIDocument.Script.RoundSystem {
             // 通过给定的帧率运行
             float loopTime = deltaTime + _timeRemainder;
             if (loopTime < _frameRate) {
-                _timeRemainder = _timeRemainder + deltaTime;
+                _timeRemainder += deltaTime;
             }
             else {
                 while (loopTime >= _frameRate) {
@@ -110,6 +113,12 @@ namespace UIDocument.Script.RoundSystem {
         float _timeRemainder;
         float _frameRate;
         
+        // 回合分析
+        Analysis _analysis;
+        
+        // 回合限定次数
+        int _needTurn;
+        
         #endregion
 
         /// <summary>
@@ -140,6 +149,8 @@ namespace UIDocument.Script.RoundSystem {
             _timeRemainder = 0f;
 
             _frameRate = 1f/config.roundConfig.logicFrameRate;
+
+            _needTurn = config.roundConfig.needTurn;
         }
         
         public void StartSet() {
@@ -161,7 +172,11 @@ namespace UIDocument.Script.RoundSystem {
 
             if (turnIndex == -1) {
                 // 所有回合都已经结束了
-                _roundContext.Status = RoundContext.RoundStatus.None;
+                RoundOver();
+                return;
+            } else if (turnIndex >= _needTurn) {
+                // 达到指定回合结束了
+                RoundOver();
                 return;
             }
             
@@ -174,15 +189,24 @@ namespace UIDocument.Script.RoundSystem {
                 }
                 _moveComponents[i] = component;
             }
-            
-            // 回合消耗行动值
-            Turn turn = _turns[turnIndex];
-            turn.Forward();
-            _turns[turnIndex] = turn;
+
+            unsafe {
+                // 回合消耗行动值
+                Turn* turn = (Turn*)_turns.GetUnsafePtr();
+                turn[turnIndex].Forward();
+                turn[turnIndex].Settle();
+            }
+ 
             
             // 结算行动
             if (_actionMoves.Count > 0) {
                 _roundContext.Status = RoundContext.RoundStatus.Option;
+                int c = _actionMoves.Count;
+                while (_roundContext.Status == RoundContext.RoundStatus.Option) {
+                    HandleOption();
+                    c--;
+                    if (c < 0) break;
+                }
             }
         }
 
@@ -193,11 +217,34 @@ namespace UIDocument.Script.RoundSystem {
             MoveComponent component = _actionMoves.Dequeue();
             DoAction(ref component);
 
-            if (_actionMoves.Count == 0) {
-                _roundContext.Status = RoundContext.RoundStatus.None;
+            unsafe {
+                // 目前是认为瞬间执行，立刻重新开始回合
+                int index = FindMoveComponentIndex(component.position);
+                if (index > -1) {
+                    MoveComponent* temp = (MoveComponent*)_moveComponents.GetUnsafePtr();
+                    temp[index].Reset();
+                }
             }
+ 
+            
+            if (_actionMoves.Count == 0) {
+                _roundContext.Status = RoundContext.RoundStatus.Running;
+            }
+        }
 
+        int FindMoveComponentIndex(int position) {
+            for (int i = 0; i < _moveComponents.Length; i++) {
+                if (_moveComponents[i].position == position) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        void RoundOver() {
+            _roundContext.Status = RoundContext.RoundStatus.None;
             Dump();
+            WriteMoveComponentAnalysis();
         }
 
         void Dump() {
@@ -212,6 +259,7 @@ namespace UIDocument.Script.RoundSystem {
 
         void DoAction(ref MoveComponent moveComponent) {
             Debug.Log($"do action {moveComponent.Dump()}");
+            AddMoveComponentToAnalysis(moveComponent);
         }
 
         void OnDumpRound(object sender, GameEventBase args) {
@@ -229,6 +277,37 @@ namespace UIDocument.Script.RoundSystem {
                 stream.MoveComponents.Add(_moveComponents[i]);
             }
             evt.Result = JsonConvert.SerializeObject(stream);
+        }
+
+        void AddMoveComponentToAnalysis(in MoveComponent moveComponent) {
+            if (_analysis == null) {
+                _analysis = ScriptableObject.CreateInstance<Analysis>();
+            }
+
+            int position = moveComponent.position;
+            var counter = _analysis.Counter.Find((x) => x.Position == position);
+            if (counter != null) {
+                counter.moveCount++;
+                counter.totalDmg += moveComponent.dmg;
+            }
+            else {
+                _analysis.Counter.Add(new ActionCounter() {
+                    Position = position,
+                    moveCount = 1,
+                    totalDmg = moveComponent.dmg
+                });
+            }
+        }
+
+        void WriteMoveComponentAnalysis() {
+            #if UNITY_EDITOR
+            if (_analysis != null) {
+                string path = "Assets/UIDocument/analysis.asset";
+                AssetDatabase.CreateAsset(_analysis, path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            #endif
         }
     }
 }

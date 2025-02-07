@@ -2,7 +2,6 @@ using System;
 using UIDocument.Script.RoundSystem.ADT;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem.Config {
-    // [CreateAssetMenu(fileName = "RoundConfig", menuName = "RoundConfig", order = 0)]
     [Serializable]
     public class RoundConfig {
         /// <summary>

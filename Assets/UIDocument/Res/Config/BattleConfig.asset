@@ -16,16 +16,14 @@ MonoBehaviour:
     perActionValue:
       value: 100
     firstActionValue:
-      value: 160
+      value: 150
     needTurn: 5
     maxTurn: 50
     logicFrameRate: 30
   moveComponentConfig:
-  - speed: 99
+  - speed: 134
     position: 1
-  - speed: 99
-    position: 2
-  - speed: 120
-    position: 3
+    dmg: 1
   - speed: 100
-    position: 4
+    position: 2
+    dmg: 1

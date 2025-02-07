@@ -25,7 +25,7 @@ namespace UIDocument.Script.RoundSystem.ADT {
         /// <returns></returns>
         public static ActionValue FromSpeed(in Speed speed) {
             return new ActionValue() {
-                value = 1 / speed.value
+                value = 10000 / speed.value
             };
         }
 

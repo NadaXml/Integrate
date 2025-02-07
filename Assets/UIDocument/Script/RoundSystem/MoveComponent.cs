@@ -34,13 +34,19 @@ namespace UIDocument.Script.RoundSystem {
         /// </summary>
         public int position;
 
+        /// <summary>
+        /// 临时存放
+        /// </summary>
+        public int dmg;
+
         public static MoveComponent FromConfig(in MoveComponentConfig config) {
             Speed s = Speed.FromValue(config.speed);
             return new MoveComponent() {
                 currentAction = ActionValue.FromSpeed(s),
                 maxAction = ActionValue.FromSpeed(s),
                 speed = s,
-                position = config.position
+                position = config.position,
+                dmg = config.dmg
             };
         }
 
@@ -51,8 +57,13 @@ namespace UIDocument.Script.RoundSystem {
         public bool IsPass() {
             return currentAction.IsPass();
         }
+
+        public void Reset() {
+            currentAction = maxAction;
+        }
+        
         public string Dump() {
-            return $"maxActoin is {maxAction.Dump()}, currentAciton is {currentAction.Dump()}, speed is {speed.Dump()}";
+            return $"position is {position} maxAction is {maxAction.Dump()}, currentAction is {currentAction.Dump()}, speed is {speed.Dump()}";
         }
         
         public int CompareTo(MoveComponent other) {
