@@ -2,8 +2,8 @@ using AppFrame;
 using System.Collections;
 using IngameDebugConsole;
 using Newtonsoft.Json;
+using UIDocument.Script.Core.ADT;
 using UIDocument.Script.EventService;
-using UIDocument.Script.RoundSystem;
 using UnityEngine;
 
 namespace UIDocument.Script.DebugSystem {
@@ -41,16 +41,15 @@ namespace UIDocument.Script.DebugSystem {
             });
         }
 
-        public void ShowRoundInspector(string result) {
+        public void ShowRoundInspector(MoveComponentStream result) {
             if (_inspectorGo == null) {
                 _inspectorGo = new GameObject();
                 Object.DontDestroyOnLoad(_inspectorGo);
                 _inspectorGo.AddComponent<DebugRoundMonobehaviour>();
             }
-            if (!string.IsNullOrEmpty(result)) {
-                var mono = _inspectorGo.GetComponent<DebugRoundMonobehaviour>();
-                mono.FromString(result);
-            }
+            
+            var mono = _inspectorGo.GetComponent<DebugRoundMonobehaviour>();
+            mono.components = result;
         }
         
         public struct CreateParam {

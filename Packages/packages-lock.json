@@ -11,6 +11,12 @@
       },
       "hash": "f7df4966aa30482fb739148aba2bc7bc672dfaf6"
     },
+    "com.google.flatbuffer": {
+      "version": "file:FlatBuffer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.integrate.uitableviewforunity": {
       "version": "file:ForkUITableViewForUnity",
       "depth": 0,

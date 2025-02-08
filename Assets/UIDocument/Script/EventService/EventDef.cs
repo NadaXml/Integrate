@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using UIDocument.Script.Core.ADT;
 namespace UIDocument.Script.EventService {
     
     // 事件定义需要走代码生成
@@ -20,7 +21,7 @@ namespace UIDocument.Script.EventService {
     public class FetchRoundInspector : DumpRoundSystem {
 
         // 可以改成字节流
-        public string Result;
+        public MoveComponentStream Result;
         
         public FetchRoundInspector() {
             EventId = 2;

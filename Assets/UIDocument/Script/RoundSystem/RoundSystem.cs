@@ -4,8 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using UIDocument.Script.Core.ADT;
+using UIDocument.Script.Core.Config;
 using UIDocument.Script.EventService;
-using UIDocument.Script.RoundSystem.Config;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
@@ -276,7 +277,7 @@ namespace UIDocument.Script.RoundSystem {
             for (int i = 0; i < _moveComponents.Length; i++) {
                 stream.MoveComponents.Add(_moveComponents[i]);
             }
-            evt.Result = JsonConvert.SerializeObject(stream);
+            evt.Result = stream;
         }
 
         void AddMoveComponentToAnalysis(in MoveComponent moveComponent) {

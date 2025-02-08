@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UIDocument.Script.Module;
 using UIFrame.Core;
 using Unity.VisualScripting;
+using UnityEngine;
 using YooAsset;
 
 namespace UIDocument.Script.App {
@@ -41,6 +42,8 @@ namespace UIDocument.Script.App {
             _services.Clear();
         }
         public IEnumerator Start() {
+
+            Application.targetFrameRate = 60;
             
             // 初始化服务
             AssetService.AssetService assetService = new AssetService.AssetService("DefaultPackage", _playMode);

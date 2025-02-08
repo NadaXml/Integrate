@@ -1,0 +1,26 @@
+namespace UIDocument.Script.Core.FBS;
+
+attribute "priority";
+
+struct FBS_ActionValue {
+    value:int32;
+}
+
+struct FBS_Speed {
+    value:int32;
+}
+
+table FBS_MoveComponent {
+    current_action:FBS_ActionValue;
+    max_action:FBS_ActionValue;
+    speed:FBS_Speed;
+    position:int32;
+    dmg:int32;
+}
+
+table FBS_MoveComponentStream {
+    move_components:[FBS_MoveComponent];
+}
+
+root_type FBS_MoveComponent;
+root_type FBS_MoveComponentStream;

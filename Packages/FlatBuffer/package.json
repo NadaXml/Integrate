@@ -1,0 +1,7 @@
+{
+  "name": "com.google.flatbuffer",
+  "version": "0.0.1",
+  "displayName": "flatbuffer",
+  "dependencies": {
+  }
+}

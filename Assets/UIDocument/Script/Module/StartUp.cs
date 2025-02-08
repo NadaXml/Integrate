@@ -1,7 +1,7 @@
 using AppFrame;
 using Cysharp.Threading.Tasks;
 using UIDocument.Script.App;
-using UIDocument.Script.RoundSystem.Config;
+using UIDocument.Script.Core.Config;
 using UIFrame.Core;
 using UnityEngine;
 using YooAsset;

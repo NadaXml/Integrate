@@ -1,5 +1,5 @@
 using AppFrame;
-using UIDocument.Script.RoundSystem.ADT;
+using UIDocument.Script.Core.ADT;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     /// <summary>
