@@ -1,24 +1,25 @@
 using AppFrame;
 using Cysharp.Threading.Tasks;
 using UIDocument.Script.App;
-using UIDocument.Script.Core.Config;
 using UIFrame.Core;
 using UnityEngine;
 using YooAsset;
+
 namespace UIDocument.Script.Module {
     public class StartUp {
         
         public class Context : IContext {
-            public UISystem UISystem;
-            public SceneSystem.SceneSystem SceneSystem;
-            public AssetService.AssetService AssetService;
-            public RoundSystem.RoundSystem RoundSystem;
+            public UISystem uiSystem;
+            public SceneSystem.SceneSystem sceneSystem;
+            public AssetService.AssetService assetService;
+            public RoundSystem.RoundSystem roundSystem;
             public SceneHandle loadingHandle;
+            public GameSystem.GameSystem gameSystem;
         }
         
         public struct CreateParam {
-            public StartUp.Context StartUpContext;
-            public AppContext AppContext;
+            public StartUp.Context startUpContext;
+            public AppContext appContext;
         }
         
         Context _startUpContext;
@@ -27,8 +28,8 @@ namespace UIDocument.Script.Module {
         LoadingPresenter _loadingPresenter;
         
         public StartUp(in CreateParam createParam) {
-            _startUpContext = createParam.StartUpContext;
-            _appContext = createParam.AppContext;
+            _startUpContext = createParam.startUpContext;
+            _appContext = createParam.appContext;
         }
 
         public async void Play() {
@@ -36,25 +37,18 @@ namespace UIDocument.Script.Module {
 
             await UniTask.WaitUntil(()=>_loadingPresenter.View.IsRootOK);
             
-            SceneHandle sceneHandle = _startUpContext.SceneSystem.LoadSceneAsync("Login");
+            SceneHandle sceneHandle = _startUpContext.sceneSystem.LoadSceneAsync("Login");
             _startUpContext.loadingHandle = sceneHandle;
             
             await sceneHandle.ToUniTask();
             Debug.Log("场景加载成功");
 
             // DestroyLoadingStartUp();
+
+            await _startUpContext.gameSystem.CreateGame();
             
-            AssetHandle handle = _startUpContext.AssetService.LoadAssetAsync<ScriptableObject>("BattleConfig");
-            await handle.ToUniTask();
+            Debug.Log("加载Game成功");
             
-            Debug.Log("加载Demo配置成功");
-            
-            BattleConfig roundConfig = handle.AssetObject as BattleConfig; 
-            if (roundConfig != null) {
-                _startUpContext.RoundSystem.CreateSet(in roundConfig);
-                _startUpContext.RoundSystem.StartSet();
-            }
-            handle.Release();
         }
 
         public void Destroy() {
@@ -66,7 +60,7 @@ namespace UIDocument.Script.Module {
             LoadingView loadingView = new LoadingView(_startUpContext);
             LoadingModel loadingModel = new LoadingModel(_startUpContext);
             presenter.Bind(loadingView, loadingModel);
-            _startUpContext.UISystem.RegisterPresenter(presenter);
+            _startUpContext.uiSystem.RegisterPresenter(presenter);
             _loadingPresenter = presenter;
             _loadingPresenter.Render();
         }
@@ -76,7 +70,7 @@ namespace UIDocument.Script.Module {
             Debug.Log("UI destroy");
             if (_loadingPresenter != null) {
                 _loadingPresenter.Destroy();
-                _startUpContext.UISystem.UnRegisterPresenter(_loadingPresenter);
+                _startUpContext.uiSystem.UnRegisterPresenter(_loadingPresenter);
                 _loadingPresenter = null;
             }
         }

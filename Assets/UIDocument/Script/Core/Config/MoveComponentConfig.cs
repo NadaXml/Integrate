@@ -10,9 +10,5 @@ namespace UIDocument.Script.Core.Config {
         /// 行动位置
         /// </summary>
         public int position;
-        /// <summary>
-        /// 不应该在这边
-        /// </summary>
-        public int dmg;
     }
 }

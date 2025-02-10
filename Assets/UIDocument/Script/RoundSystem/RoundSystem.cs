@@ -1,6 +1,4 @@
 using AppFrame;
-using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -9,19 +7,24 @@ using UIDocument.Script.Core.Config;
 using UIDocument.Script.EventService;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using UnityEditor;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     public class RoundSystem : ISystem {
         
         public void Awake() {
-            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.DumpRound, OnDumpRound);
-            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.DumpRoundInspector, OnDumpInspector);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_DumpRound, OnDumpRound);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_DumpRoundInspector, OnDumpInspector);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_CreateRound, OnCreateRound);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_CreateMove, OnCreateMove);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_StartGame, OnStartGame);
         }
 
         public void Destroy() {
-            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRound, OnDumpRound);
-            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.DumpRoundInspector, OnDumpInspector);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_DumpRound, OnDumpRound);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_DumpRoundInspector, OnDumpInspector);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_CreateRound, OnCreateRound);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_CreateMove, OnCreateMove);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_StartGame, OnStartGame);
             _moveComponents.Dispose();
             _turns.Dispose();
         }
@@ -114,47 +117,50 @@ namespace UIDocument.Script.RoundSystem {
         float _timeRemainder;
         float _frameRate;
         
-        // 回合分析
-        Analysis _analysis;
-        
         // 回合限定次数
         int _needTurn;
         
         #endregion
 
-        /// <summary>
-        /// 创建回合
-        /// </summary>
-        /// <param name="config"></param>
-        public void CreateSet(in BattleConfig config) {
-            
+        
+        void OnCreateRound(object sender, GameEventBase e) {
+            CreateRoundEvent evt = e as CreateRoundEvent;
+            CreateRound(evt.roundConfig);
+        }
+
+        void CreateRound(in RoundConfig roundConfig) {
             // 创建轮次
-            var maxTurn = config.roundConfig.maxTurn;
+            var maxTurn = roundConfig.maxTurn;
             _turns = new NativeArray<Turn>(maxTurn, Allocator.Persistent);
             for (int i = 0; i < maxTurn; i++) {
-                int turnActionValue = i == 0 ? config.roundConfig.firstActionValue.value : config.roundConfig.perActionValue.value;
+                int turnActionValue = i == 0 ? roundConfig.firstActionValue.value : roundConfig.perActionValue.value;
                 Turn turn = Turn.FromMaxActionValue(turnActionValue);
                 _turns[i] = turn;
             }
-
-            _moveComponents = new NativeArray<MoveComponent>(config.moveComponentConfig.Count, Allocator.Persistent);
-            int index = 0;
-            // 创建可移动者
-            foreach (var moveConfig in config.moveComponentConfig) {
-                var moveComponent = MoveComponent.FromConfig(moveConfig);
-                _moveComponents[index++] = moveComponent;
-                _testSortedMove.Add(moveComponent);
-            }
-
+            
             _roundContext.Status = RoundContext.RoundStatus.None;
             _timeRemainder = 0f;
 
-            _frameRate = 1f/config.roundConfig.logicFrameRate;
+            _frameRate = 1f/roundConfig.logicFrameRate;
 
-            _needTurn = config.roundConfig.needTurn;
+            _needTurn = roundConfig.needTurn;
+        }
+
+        void OnCreateMove(object sender, GameEventBase e) {
+            CreateMoveEvent evt = e as CreateMoveEvent;
+            CreateMove(evt.components);
         }
         
-        public void StartSet() {
+        void CreateMove(in MoveComponent[] components) {
+            _moveComponents = new NativeArray<MoveComponent>(components.Length, Allocator.Persistent);
+            _moveComponents.CopyFrom(components);
+            // 创建可移动者
+            foreach (var move in _moveComponents) {
+                _testSortedMove.Add(move);
+            }
+        }
+        
+        void OnStartGame(object sender, GameEventBase e) {
             _roundContext.Status = RoundContext.RoundStatus.Running;
         }
 
@@ -245,7 +251,10 @@ namespace UIDocument.Script.RoundSystem {
         void RoundOver() {
             _roundContext.Status = RoundContext.RoundStatus.None;
             Dump();
-            WriteMoveComponentAnalysis();
+            
+            DefaultEvent evt = new DefaultEvent();
+            evt.EventId = EventNameDef.ID_OnRoundOver;
+            _eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_OnRoundOver, evt);
         }
 
         void Dump() {
@@ -260,7 +269,15 @@ namespace UIDocument.Script.RoundSystem {
 
         void DoAction(ref MoveComponent moveComponent) {
             Debug.Log($"do action {moveComponent.Dump()}");
-            AddMoveComponentToAnalysis(moveComponent);
+            
+            OnRoundOptionEvent evt = new OnRoundOptionEvent();
+            evt.component = moveComponent;
+            _eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_OnRoundOption, evt);
+            
+            // 暂时先这么写
+            var evt2 = new AnalyticsMoveCountEvent();
+            evt2.moveComponent = moveComponent;
+            _eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_AnalyticsMoveCount, evt2);
         }
 
         void OnDumpRound(object sender, GameEventBase args) {
@@ -268,7 +285,7 @@ namespace UIDocument.Script.RoundSystem {
         }
         
         void OnDumpInspector(object sender, GameEventBase e) {
-            FetchRoundInspector evt = e as FetchRoundInspector;
+            DumpRoundInspectorEvent evt = e as DumpRoundInspectorEvent;
             if (evt == null) {
                 return;
             }
@@ -277,38 +294,7 @@ namespace UIDocument.Script.RoundSystem {
             for (int i = 0; i < _moveComponents.Length; i++) {
                 stream.MoveComponents.Add(_moveComponents[i]);
             }
-            evt.Result = stream;
-        }
-
-        void AddMoveComponentToAnalysis(in MoveComponent moveComponent) {
-            if (_analysis == null) {
-                _analysis = ScriptableObject.CreateInstance<Analysis>();
-            }
-
-            int position = moveComponent.position;
-            var counter = _analysis.Counter.Find((x) => x.Position == position);
-            if (counter != null) {
-                counter.moveCount++;
-                counter.totalDmg += moveComponent.dmg;
-            }
-            else {
-                _analysis.Counter.Add(new ActionCounter() {
-                    Position = position,
-                    moveCount = 1,
-                    totalDmg = moveComponent.dmg
-                });
-            }
-        }
-
-        void WriteMoveComponentAnalysis() {
-            #if UNITY_EDITOR
-            if (_analysis != null) {
-                string path = "Assets/UIDocument/analysis.asset";
-                AssetDatabase.CreateAsset(_analysis, path);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            }
-            #endif
+            evt.result = stream;
         }
     }
 }

@@ -50,5 +50,15 @@ namespace UIDocument.Script.RoundSystem {
         public string Dump() {
             return $"current is {_currentActionValue.value}, target is {_targetActionValue.value}";
         }
+        public ulong actorSequenceId
+        {
+            get;
+            set;
+        }
+        public ulong sequenceId
+        {
+            get;
+            set;
+        }
     }
 }

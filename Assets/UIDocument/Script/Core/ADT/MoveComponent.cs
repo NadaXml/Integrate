@@ -32,11 +32,6 @@ namespace UIDocument.Script.Core.ADT {
         /// </summary>
         public int position;
 
-        /// <summary>
-        /// 临时存放
-        /// </summary>
-        public int dmg;
-
         public static MoveComponent FromConfig(in MoveComponentConfig config) {
             Speed s = Speed.FromValue(config.speed);
             return new MoveComponent() {
@@ -44,7 +39,6 @@ namespace UIDocument.Script.Core.ADT {
                 maxAction = ActionValue.FromSpeed(s),
                 speed = s,
                 position = config.position,
-                dmg = config.dmg
             };
         }
 
@@ -77,13 +71,15 @@ namespace UIDocument.Script.Core.ADT {
         public override int GetHashCode() {
             return HashCode.Combine(currentAction, maxAction, speed, position);
         }
-
-        public static string SerializeToString(in MoveComponent component) {
-            return JsonConvert.SerializeObject(component);
+        public ulong actorSequenceId
+        {
+            get;
+            set;
         }
-        
-        public static MoveComponent DeSerializeFromString(string json) {
-            return JsonConvert.DeserializeObject<MoveComponent>(json);
+        public ulong sequenceId
+        {
+            get;
+            set;
         }
     }
 

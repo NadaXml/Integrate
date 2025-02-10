@@ -4,6 +4,6 @@ namespace UIDocument.Script.Core.Config {
     [CreateAssetMenu(fileName = "BattleConfig", menuName = "BattleConfig", order = 0)]
     public class BattleConfig : ScriptableObject {
         public RoundConfig roundConfig;
-        public List<MoveComponentConfig> moveComponentConfig;
+        public List<ActorConfig> actorConfig;
     }
 }

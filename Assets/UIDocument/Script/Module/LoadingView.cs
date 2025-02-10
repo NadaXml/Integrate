@@ -10,12 +10,12 @@ namespace UIDocument.Script.Module {
             _context = context;
         }
 
-        public string RootAssetName = "Loading";
-        UISystem.HandleRes _RootHandle;
-        UITree _RootTree;
+        public const string C_RootAssetName = "Loading";
+        UISystem.HandleRes _rootHandle;
+        UITree _rootTree;
 
         public struct UIComponentTemplate {
-            public Slider LoadingProgress;
+            public Slider loadingProgress;
         }
         
         public void Awake() {
@@ -24,21 +24,21 @@ namespace UIDocument.Script.Module {
         
         public void Destroy() {
             DestroyTemplate();
-            GameObject.Destroy(_RootHandle.GO);
-            _RootHandle.AssetHandle.Release();
+            GameObject.Destroy(_rootHandle.GO);
+            _rootHandle.AssetHandle.Release();
         }
 
         UIComponentTemplate _componentTemplate;
         public Transform RootTransform
         {
             get {
-                return _RootHandle.GO.transform;
+                return _rootHandle.GO.transform;
             }
         }
         public bool IsRootOK
         {
             get {
-                return _RootHandle.AssetHandle is {IsValid: true, IsDone: true};
+                return _rootHandle.AssetHandle is {IsValid: true, IsDone: true};
             }
         }
 
@@ -57,26 +57,26 @@ namespace UIDocument.Script.Module {
             template.keys.Clear();
             template.sliders.Clear();
             _componentTemplate = new UIComponentTemplate() {
-                LoadingProgress = LoadingProgress,
+                loadingProgress = LoadingProgress,
             };
             
         }
         
         public void DestroyTemplate() {
-            _componentTemplate.LoadingProgress?.Destroy();
+            _componentTemplate.loadingProgress?.Destroy();
         }
 
         async UniTask PrepareAsset() {
-            if (_RootHandle.GO == null) {
-                var assetHandle = _context.AssetService.LoadAssetAsync<GameObject>(RootAssetName);
+            if (_rootHandle.GO == null) {
+                var assetHandle = _context.assetService.LoadAssetAsync<GameObject>(C_RootAssetName);
                 await assetHandle.ToUniTask();
-                _RootHandle = new UISystem.HandleRes() {
+                _rootHandle = new UISystem.HandleRes() {
                     AssetHandle = assetHandle,
                     GO = (GameObject)Object.Instantiate(assetHandle.AssetObject),
                 };
-                _context.UISystem.AddToRoot(this);
-                _RootTree = _RootHandle.GO.GetComponent<UITree>();
-                BindTemplate(_RootTree);
+                _context.uiSystem.AddToRoot(this);
+                _rootTree = _rootHandle.GO.GetComponent<UITree>();
+                BindTemplate(_rootTree);
             }
         }
         
@@ -86,7 +86,7 @@ namespace UIDocument.Script.Module {
         }
 
         public void RenderProgress(float progress) {
-            _componentTemplate.LoadingProgress.SetProgress(progress);
+            _componentTemplate.loadingProgress.SetProgress(progress);
         }
     }
 }

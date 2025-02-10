@@ -32,7 +32,7 @@ namespace UIDocument.Script.Core.ADT {
             };
         }
 
-        public static ActionValue C_Zero = ActionValue.FromValue(0);
+        public static ActionValue Zero = ActionValue.FromValue(0);
         
         /// <summary>
         /// 行动值

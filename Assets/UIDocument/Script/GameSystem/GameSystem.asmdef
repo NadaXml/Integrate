@@ -1,8 +1,13 @@
 {
-    "name": "EventService",
+    "name": "GameSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:1e20554ebdff9cf4b8421f5f05d86cfd"
+        "GUID:1e20554ebdff9cf4b8421f5f05d86cfd",
+        "GUID:ecb86ca126b5490d95d3409e93d95132",
+        "GUID:cfd990eef4d543aab00c3a9b730b76a9",
+        "GUID:e34a5702dd353724aa315fb8011f08c3",
+        "GUID:2d595718bf1045969de10d315bc6c203",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -5,19 +5,23 @@ namespace UIDocument.Script.Core.Config {
     
     [Serializable]
     public class ActionCounter {
-        public int Position;
+        public ulong actorSequence;
+        public int position;
         public int moveCount;
         public int totalDmg;
     }
     
+    /// <summary>
+    /// 结算后技术统计
+    /// </summary>
     [CreateAssetMenu(fileName = "Analysis", menuName = "Analysis", order = 0)]
     public class Analysis : ScriptableObject {
         
         [SerializeField]
-        public List<ActionCounter> Counter;
+        public List<ActionCounter> counter;
 
         public Analysis() {
-            Counter = new List<ActionCounter>();
+            counter = new List<ActionCounter>();
         }
     }
 }

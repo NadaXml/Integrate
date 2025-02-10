@@ -84,8 +84,8 @@ namespace UIDocument.Script.App {
             _systems.Add(roundSystem);
 
             DebugSystem.DebugSystem.CreateParam debugCreateParam = new DebugSystem.DebugSystem.CreateParam() {
-                Context = new DebugSystem.DebugSystem.DebugSystemContext() {
-                    EventServiceProvider = this
+                context = new DebugSystem.DebugSystem.DebugSystemContext() {
+                    eventServiceProvider = this
                 }
             };
             DebugSystem.DebugSystem debugSystem = new DebugSystem.DebugSystem(in debugCreateParam);
@@ -93,14 +93,33 @@ namespace UIDocument.Script.App {
             yield return debugSystem.Start();
             _systems.Add(debugSystem);
 
+            BattleSystem.BattleSystem.Context battleSystemContext = new BattleSystem.BattleSystem.Context() {
+                eventServiceProvider = this
+            };
+            
+            BattleSystem.BattleSystem battleSystem = new BattleSystem.BattleSystem(battleSystemContext);
+            battleSystem.Awake();
+            yield return debugSystem.Start();
+            _systems.Add(battleSystem);
+
+            GameSystem.GameSystem.Context gameSystemContext = new GameSystem.GameSystem.Context() {
+                EventServiceProvider = this,
+                AssetService = assetService
+            };
+            GameSystem.GameSystem gameSystem = new GameSystem.GameSystem(gameSystemContext);
+            gameSystem.Awake();
+            yield return gameSystem.Start();
+            _systems.Add(gameSystem);
+            
+
             var createParam = new StartUp.CreateParam() {
-                StartUpContext = new StartUp.Context() {
-                    SceneSystem = sceneSystem,
-                    AssetService = assetService,
-                    RoundSystem = roundSystem,
-                    UISystem = uiSystem
+                startUpContext = new StartUp.Context() {
+                    sceneSystem = sceneSystem,
+                    assetService = assetService,
+                    roundSystem = roundSystem,
+                    uiSystem = uiSystem
                 },
-                AppContext = _appContext
+                appContext = _appContext
             };
             _startUp = new StartUp(in createParam);
         }
