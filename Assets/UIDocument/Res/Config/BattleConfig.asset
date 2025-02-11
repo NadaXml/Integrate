@@ -17,13 +17,19 @@ MonoBehaviour:
       value: 100
     firstActionValue:
       value: 150
-    needTurn: 5
+    needTurn: 1
     maxTurn: 50
     logicFrameRate: 30
-  moveComponentConfig:
-  - speed: 134
-    position: 1
-    dmg: 1
-  - speed: 100
-    position: 2
-    dmg: 1
+  actorConfig:
+  - moveComponentConfig:
+      speed: 99
+      position: 1
+    battleComponentConfig:
+      dmg: 1
+      energy: 100
+  - moveComponentConfig:
+      speed: 134
+      position: 2
+    battleComponentConfig:
+      dmg: 1
+      energy: 100

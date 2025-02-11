@@ -1,10 +1,7 @@
 using AppFrame;
-using Google.FlatBuffers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UIDocument.Script.Core.Config;
-using UnityEngine.Profiling;
 namespace UIDocument.Script.Core.ADT {
     
     /// <summary>
@@ -81,10 +78,55 @@ namespace UIDocument.Script.Core.ADT {
             get;
             set;
         }
+        
+        public void AddSpeedValueAffect(int value) {
+            speed.AddSpeedValueAffect(value);
+            ApplySpeedEffect();
+        }
+
+        public void RemoveSpeedValueAffect(int value) {
+            speed.RemoveSpeedValueAffect(value);
+            ApplySpeedEffect();
+        }
+        
+        public void AddSpeedPercentAffect(int percent) {
+            speed.AddSpeedPercentAffect(percent);
+            ApplySpeedEffect();
+        }
+
+        public void RemoveSpeedPercentAffect(int percent) {
+            speed.RemoveSpeedPercentAffect(percent);
+            ApplySpeedEffect();
+        }
+        
+        public void AdvanceActionValueP(int p) {  // 是否立即结算？对结果有区别
+            var v = p * maxAction;
+            if (currentAction > v) {
+                currentAction -= v;
+            }
+            else {
+                currentAction = ActionValue.Zero;
+            }
+        }
+
+        public void DelayActionValueP(int p) { // 是否立即结算？对结果有区别
+            var v = p * maxAction;
+            currentAction += v;
+        }
+        
+        public void ApplySpeedEffect() {
+            int prevValue = speed.value;
+            int postValue = speed.Apply();
+            if (postValue != prevValue) { // 速度变化，影响最大行动值，当期最大
+                var prevMaxAction = maxAction;
+                maxAction = ActionValue.FromSpeed(speed);
+                currentAction = currentAction / prevMaxAction * maxAction;
+            }
+        }
     }
 
     [Serializable]
     public struct MoveComponentStream {
-        public List<MoveComponent> MoveComponents;
+        public List<MoveComponent> moveComponents;
     }
 }

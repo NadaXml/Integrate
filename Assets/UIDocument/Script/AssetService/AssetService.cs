@@ -99,6 +99,11 @@ namespace UIDocument.Script.AssetService {
         public AssetHandle LoadAssetAsync<TObject>(string assetName) where TObject : UnityEngine.Object {
             return YooAssets.LoadAssetAsync<TObject>(assetName);
         }
+
+        public void UnloadAsset(string assetName) {
+            var package = YooAssets.GetPackage(_packageName);
+            package.TryUnloadUnusedAsset(assetName);
+        }
         
         public SceneHandle LoadSceneAsync(string sceneName) {
             return YooAssets.LoadSceneAsync(sceneName);

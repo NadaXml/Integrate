@@ -8,6 +8,7 @@ using UIDocument.Script.EventService;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.UIElements;
 namespace UIDocument.Script.RoundSystem {
     public class RoundSystem : ISystem {
         
@@ -17,6 +18,7 @@ namespace UIDocument.Script.RoundSystem {
             _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_CreateRound, OnCreateRound);
             _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_CreateMove, OnCreateMove);
             _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_StartGame, OnStartGame);
+            _eventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_ActionValueChange, OnActionValueChange);
         }
 
         public void Destroy() {
@@ -25,16 +27,18 @@ namespace UIDocument.Script.RoundSystem {
             _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_CreateRound, OnCreateRound);
             _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_CreateMove, OnCreateMove);
             _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_StartGame, OnStartGame);
+            _eventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_ActionValueChange, OnActionValueChange);
             _moveComponents.Dispose();
             _turns.Dispose();
         }
+
         public IEnumerator Start() {
             yield return null;
         }
         
         public void Update(float deltaTime) {
             
-            if(_roundContext.Status != RoundContext.RoundStatus.Running) return;
+            if(_roundContext.status != RoundStatus.Running) return;
             
             // 通过给定的帧率运行
             float loopTime = deltaTime + _timeRemainder;
@@ -49,7 +53,7 @@ namespace UIDocument.Script.RoundSystem {
                         _timeRemainder = loopTime + _frameRate;
                         break;
                     }
-                    if(_roundContext.Status != RoundContext.RoundStatus.Running) break;
+                    if(_roundContext.status != RoundStatus.Running) break;
                 }
                 if (loopTime > 0) {
                     _timeRemainder += loopTime;
@@ -58,31 +62,23 @@ namespace UIDocument.Script.RoundSystem {
         }
         
         public struct CreateParam {
-            public EventService.EventServiceProvider EventServiceProvider;
+            public EventServiceProvider eventServiceProvider;
         }
         
         public RoundSystem(in CreateParam param) {
-            _eventServiceProvider = param.EventServiceProvider;
-            _roundContext.TurnIndex = 0;
-            _roundContext.Status = RoundContext.RoundStatus.None;
+            _eventServiceProvider = param.eventServiceProvider;
+            _roundContext.turnIndex = 0;
+            _roundContext.status = RoundStatus.None;
         }
         
         #region including def
         
         public struct RoundContext : IDumpable {
-            public enum RoundStatus {
-                None        = 0,    // 初始状态
-                Running     = 1,    // 运行中
-                Animation   = 2,    // 回合事件表现阶段
-                Option      = 3,    // 回合选择中
-                Pause       = 4,    // 暂停表现
-            }
-
-            public RoundStatus Status;
-            public int TurnIndex;
+            public RoundStatus status;
+            public int turnIndex;
             
             public string Dump() {
-                return $"Round Status : {Status} Round Turn : {TurnIndex} ";
+                return $"Round Status : {status} Round Turn : {turnIndex} ";
             }
         }
         
@@ -102,7 +98,7 @@ namespace UIDocument.Script.RoundSystem {
         /// <summary>
         /// 回合运行数据
         /// </summary>
-        RoundContext _roundContext = new RoundContext();
+        RoundContext _roundContext;
         
         /// <summary>
         /// 当期行动值产生的行动者
@@ -111,7 +107,7 @@ namespace UIDocument.Script.RoundSystem {
 
         SortedSet<MoveComponent> _testSortedMove = new SortedSet<MoveComponent>();
         
-        EventService.EventServiceProvider _eventServiceProvider;
+        EventServiceProvider _eventServiceProvider;
         
         // 系统运行时间参数
         float _timeRemainder;
@@ -138,7 +134,7 @@ namespace UIDocument.Script.RoundSystem {
                 _turns[i] = turn;
             }
             
-            _roundContext.Status = RoundContext.RoundStatus.None;
+            _roundContext.status = RoundStatus.None;
             _timeRemainder = 0f;
 
             _frameRate = 1f/roundConfig.logicFrameRate;
@@ -161,16 +157,28 @@ namespace UIDocument.Script.RoundSystem {
         }
         
         void OnStartGame(object sender, GameEventBase e) {
-            _roundContext.Status = RoundContext.RoundStatus.Running;
+            _roundContext.status = RoundStatus.Running;
         }
 
+        void OnActionValueChange(object sender, GameEventBase e) {
+            ActionValueChangeEvent evt = e as ActionValueChangeEvent;
+
+            int index = FindMoveComponentIndexByActor(evt.actorSequenceId);
+            unsafe {
+                if(index > 0) {
+                    var prt = (MoveComponent*)_moveComponents.GetUnsafePtr();
+                    prt[index].AdvanceActionValueP(evt.p);
+                }
+            }
+        }
+        
         /// <summary>
         /// 向前行动值运行
         /// </summary>
         void Step() {
             // 校验回合合法
             int turnIndex = -1;
-            for(int i = _roundContext.TurnIndex ; i < _turns.Length ; i++) {
+            for(int i = _roundContext.turnIndex ; i < _turns.Length ; i++) {
                 if (_turns[i].CheckForward()) {
                     turnIndex = i;
                     break;
@@ -207,9 +215,9 @@ namespace UIDocument.Script.RoundSystem {
             
             // 结算行动
             if (_actionMoves.Count > 0) {
-                _roundContext.Status = RoundContext.RoundStatus.Option;
+                _roundContext.status = RoundStatus.Option;
                 int c = _actionMoves.Count;
-                while (_roundContext.Status == RoundContext.RoundStatus.Option) {
+                while (_roundContext.status == RoundStatus.Option) {
                     HandleOption();
                     c--;
                     if (c < 0) break;
@@ -218,24 +226,25 @@ namespace UIDocument.Script.RoundSystem {
         }
 
         void HandleOption() {
-            if (_roundContext.Status != RoundContext.RoundStatus.Option) {
+            if (_roundContext.status != RoundStatus.Option) {
                 return;
             }
             MoveComponent component = _actionMoves.Dequeue();
             DoAction(ref component);
 
+            // TODO 这里可能打断， 未来再改
+            
             unsafe {
                 // 目前是认为瞬间执行，立刻重新开始回合
                 int index = FindMoveComponentIndex(component.position);
                 if (index > -1) {
-                    MoveComponent* temp = (MoveComponent*)_moveComponents.GetUnsafePtr();
+                    var temp = (MoveComponent*)_moveComponents.GetUnsafePtr();
                     temp[index].Reset();
                 }
             }
- 
             
             if (_actionMoves.Count == 0) {
-                _roundContext.Status = RoundContext.RoundStatus.Running;
+                _roundContext.status = RoundStatus.Running;
             }
         }
 
@@ -247,9 +256,18 @@ namespace UIDocument.Script.RoundSystem {
             }
             return -1;
         }
+
+        int FindMoveComponentIndexByActor(ulong actorSequenceId) {
+            for (int i = 0; i < _moveComponents.Length; i++) {
+                if (_moveComponents[i].actorSequenceId == actorSequenceId) {
+                    return i;
+                }
+            }
+            return -1;
+        }
         
         void RoundOver() {
-            _roundContext.Status = RoundContext.RoundStatus.None;
+            _roundContext.status = RoundStatus.None;
             Dump();
             
             DefaultEvent evt = new DefaultEvent();
@@ -290,9 +308,9 @@ namespace UIDocument.Script.RoundSystem {
                 return;
             }
             MoveComponentStream stream = new MoveComponentStream();
-            stream.MoveComponents = new List<MoveComponent>();
+            stream.moveComponents = new List<MoveComponent>();
             for (int i = 0; i < _moveComponents.Length; i++) {
-                stream.MoveComponents.Add(_moveComponents[i]);
+                stream.moveComponents.Add(_moveComponents[i]);
             }
             evt.result = stream;
         }

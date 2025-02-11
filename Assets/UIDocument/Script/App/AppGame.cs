@@ -75,7 +75,7 @@ namespace UIDocument.Script.App {
             _systems.Add(uiSystem);
 
             RoundSystem.RoundSystem.CreateParam roundCreateParam = new RoundSystem.RoundSystem.CreateParam() {
-                EventServiceProvider = this
+                eventServiceProvider = this
             };
             
             RoundSystem.RoundSystem roundSystem = new RoundSystem.RoundSystem(roundCreateParam);
@@ -116,6 +116,7 @@ namespace UIDocument.Script.App {
                 startUpContext = new StartUp.Context() {
                     sceneSystem = sceneSystem,
                     assetService = assetService,
+                    gameSystem = gameSystem,
                     roundSystem = roundSystem,
                     uiSystem = uiSystem
                 },

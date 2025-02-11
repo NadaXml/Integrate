@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345868e9335f4c7cb2a06cc09e0ad0c3, type: 3}
   m_Name: analysis
   m_EditorClassIdentifier: 
-  Counter:
-  - Position: 1
-    moveCount: 7
-    totalDmg: 7
-  - Position: 2
-    moveCount: 5
-    totalDmg: 5
+  counter:
+  - actorSequence: 1
+    position: 2
+    moveCount: 2
+    totalDmg: 0
+  - actorSequence: 0
+    position: 1
+    moveCount: 1
+    totalDmg: 0

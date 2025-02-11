@@ -43,6 +43,12 @@ namespace UIDocument.Script.DebugSystem {
                 _context.eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_DumpRoundInspector, evt);
                 ShowRoundInspector(evt.result);
             });
+            
+            DebugLogConsole.AddCommand(EventNameDef.N_Retry, "retry", () => {
+                var evt = new DefaultEvent();
+                evt.EventId = EventNameDef.ID_Retry;
+                _context.eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_Retry, evt);
+            });
         }
 
         public void ShowRoundInspector(MoveComponentStream result) {

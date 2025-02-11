@@ -1,4 +1,5 @@
 using AppFrame;
+using Codice.Client.ChangeTrackerService;
 using Cysharp.Threading.Tasks;
 using Mono.Cecil;
 using System;
@@ -16,11 +17,19 @@ namespace UIDocument.Script.GameSystem {
             // throw new System.NotImplementedException();
         }
         public void Awake() {
-            // throw new System.NotImplementedException();
+            _context.EventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_AnalyticsDmg, OnAnalyticsDmg);
+            _context.EventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_AnalyticsMoveCount, OnAnalyticsMoveCount);
+            _context.EventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_OnRoundOver, OnRoundOver);
+            _context.EventServiceProvider.GetEventService().RegisterEvent(EventNameDef.N_Retry, OnRetry);
         }
         public void Destroy() {
+            _context.EventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_AnalyticsDmg, OnAnalyticsDmg);
+            _context.EventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_AnalyticsMoveCount, OnAnalyticsMoveCount);
+            _context.EventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_OnRoundOver, OnRoundOver);
+            _context.EventServiceProvider.GetEventService().UnRegisterEvent(EventNameDef.N_Retry, OnRetry);
             DestroyGame();
         }
+
         public IEnumerator Start() {
             // throw new System.NotImplementedException();
             yield return null;
@@ -48,12 +57,38 @@ namespace UIDocument.Script.GameSystem {
             _context = context;
         }
 
+        void OnAnalyticsDmg(object sender, GameEventBase e) {
+            AnalyticsDmgEvent evt = e as AnalyticsDmgEvent;
+            AddBattleComponentToAnalysis(evt.battleComponent);
+        }
+        
+        void OnAnalyticsMoveCount(object sender, GameEventBase e) {
+            AnalyticsMoveCountEvent evt = e as AnalyticsMoveCountEvent;
+            AddMoveComponentToAnalysis(evt.moveComponent);
+        }
+        
+        void OnRoundOver(object sender, GameEventBase e) {
+            WriteMoveComponentAnalysis();
+        }
+        
+        void OnRetry(object sender, GameEventBase e) {
+            QueryRoundStatusEvent evt = new QueryRoundStatusEvent();
+            _context.EventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_QueryRoundStatus, evt);
+            if (evt.status != RoundStatus.None) {
+                return;
+            }
+            
+            DestroyGame();
+            CreateGame().Forget();
+        }
+        
         public async UniTask CreateGame() {
             AssetHandle handle = _context.AssetService.LoadAssetAsync<ScriptableObject>("BattleConfig");
             await handle.ToUniTask();
             
             _battleConfig = handle;
             _actorId = 0;
+            _analysis = ScriptableObject.CreateInstance<Analysis>();
             
             CreateActor();
             StartGame();
@@ -106,6 +141,7 @@ namespace UIDocument.Script.GameSystem {
         public void DestroyGame() {
             _actors.Clear();
             _battleConfig.Release();
+            _context.AssetService.UnloadAsset("BattleConfig");
         }
         
         void AddMoveComponentToAnalysis(in MoveComponent moveComponent) {

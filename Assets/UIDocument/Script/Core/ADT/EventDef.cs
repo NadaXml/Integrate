@@ -14,7 +14,11 @@ namespace UIDocument.Script.Core.ADT {
         public const string N_StartGame = "start_game";
         public const string N_AnalyticsDmg = "analytics_dmg";
         public const string N_AnalyticsMoveCount = "analytics_moveCount";
+        public const string N_SpeedChange = "speed_change";
+        public const string N_ActionValueChange = "action_value_change";
         public const string N_OnRoundOver = "on_round_over";
+        public const string N_Retry = "retry";
+        public const string N_QueryRoundStatus = "query_round_status";
         
         public const int ID_InValid = 0;
         public const int ID_DumpRound = 1;
@@ -26,7 +30,11 @@ namespace UIDocument.Script.Core.ADT {
         public const int ID_StartGame = 8;
         public const int ID_AnalyticsDmg = 9;
         public const int ID_AnalyticsMoveCount = 10;
-        public const int ID_OnRoundOver = 11;
+        public const int ID_SpeedChange = 11;
+        public const int ID_ActionValueChange = 12;
+        public const int ID_OnRoundOver = 13;
+        public const int ID_Retry = 14;
+        public const int ID_QueryRoundStatus = 15;
     }
 
     public class DefaultEvent : GameEventBase {
@@ -96,6 +104,21 @@ namespace UIDocument.Script.Core.ADT {
         public MoveComponent moveComponent;
         public AnalyticsMoveCountEvent() {
             EventId = EventNameDef.ID_AnalyticsMoveCount;
+        }
+    }
+
+    public class ActionValueChangeEvent : GameEventBase {
+        public ulong actorSequenceId;
+        public int p;
+        public ActionValueChangeEvent() {
+            EventId = EventNameDef.ID_ActionValueChange;
+        }
+    }
+
+    public class QueryRoundStatusEvent : GameEventBase {
+        public RoundStatus status;
+        public QueryRoundStatusEvent() {
+            EventId = EventNameDef.ID_QueryRoundStatus;
         }
     }
 }

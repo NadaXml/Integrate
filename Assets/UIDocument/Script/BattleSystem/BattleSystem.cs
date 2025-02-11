@@ -23,7 +23,7 @@ namespace UIDocument.Script.BattleSystem {
         }
 
         public struct Context {
-            public EventService.EventServiceProvider eventServiceProvider;
+            public EventServiceProvider eventServiceProvider;
         }
 
         Context _context;
@@ -44,9 +44,16 @@ namespace UIDocument.Script.BattleSystem {
             OnRoundOptionEvent evt = e as OnRoundOptionEvent;
             foreach (BattleComponent battleComponent in _battleComponents) {
                 if (battleComponent.IsSameActor(evt.component)) {
-                    var evt2 = new AnalyticsDmgEvent();
-                    evt2.battleComponent = battleComponent;
-                    _context.eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_AnalyticsDmg, evt2);
+                    if (battleComponent.sequenceId == 0) { // 攻击者攻击
+                        var evt2 = new AnalyticsDmgEvent();
+                        evt2.battleComponent = battleComponent;
+                        _context.eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_AnalyticsDmg, evt2);
+                    } else if (battleComponent.sequenceId == 1) { // 拉条
+                        var evt2 = new ActionValueChangeEvent();
+                        evt2.actorSequenceId = 0;
+                        evt2.p = 1;
+                        _context.eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_ActionValueChange, evt2);
+                    }
                 }
             }
         }

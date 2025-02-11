@@ -11,7 +11,7 @@ namespace UIDocument.Script.Core.ADT {
             return obj is ActionValue other && Equals(other);
         }
         public override int GetHashCode() {
-            return value.GetHashCode();
+            return value;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace UIDocument.Script.Core.ADT {
         /// </summary>
         public int value;
         
-        public const int C_Action_Param = 1000;
+        public const int C_Action_Param = 10000;
         
         /// <summary>
         /// 通过速度得到最大行动值
@@ -67,6 +67,16 @@ namespace UIDocument.Script.Core.ADT {
             return new ActionValue() {
                 value = left.value - right.value
             };
+        }
+
+        public static ActionValue operator *(float percent, ActionValue right) {
+            return new ActionValue() {
+                value = (int)(percent * right.value)
+            };
+        }
+        
+        public static float operator /(ActionValue left, ActionValue right) {
+            return (float)left.value / right.value;
         }
         
         public static bool operator ==(ActionValue left, ActionValue right) {

@@ -1,10 +1,12 @@
 using AppFrame;
+using System;
 using UIDocument.Script.Core.ADT;
 using UnityEngine;
 namespace UIDocument.Script.RoundSystem {
     /// <summary>
     /// 轮次
     /// </summary>
+    [Serializable]
     public struct Turn : IComponent, IDumpable {
         /// <summary>
         /// 当前回合剩余行动值
