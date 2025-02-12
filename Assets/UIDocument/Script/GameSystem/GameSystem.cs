@@ -9,6 +9,7 @@ using UIDocument.Script.Core.ADT;
 using UIDocument.Script.Core.Config;
 using UIDocument.Script.EventService;
 using UnityEngine;
+using UnityEngine.Assertions;
 using YooAsset;
 namespace UIDocument.Script.GameSystem {
     public class GameSystem : ISystem {
@@ -36,7 +37,7 @@ namespace UIDocument.Script.GameSystem {
         }
 
         public struct Context {
-            public EventService.EventServiceProvider EventServiceProvider;
+            public EventServiceProvider EventServiceProvider;
             public AssetService.AssetService AssetService;
         }
 
@@ -45,6 +46,9 @@ namespace UIDocument.Script.GameSystem {
         
         ulong _actorId;
         ulong AllocateActorSequenceId() {
+            #if DEBUG
+                Assert.IsTrue(_actorId < ulong.MaxValue);
+            #endif
             return _actorId++;
         }
         
@@ -171,12 +175,12 @@ namespace UIDocument.Script.GameSystem {
             ulong actorSequence = battleComponent.actorSequenceId;
             var counter = _analysis.counter.Find((x) => x.actorSequence == actorSequence);
             if (counter != null) {
-                counter.totalDmg += battleComponent.dmg;
+                counter.totalDmg += battleComponent.atk.value;
             }
             else {
                 _analysis.counter.Add(new ActionCounter() {
                     actorSequence = actorSequence,
-                    totalDmg = battleComponent.dmg
+                    totalDmg = battleComponent.atk.value
                 });
             }
         }

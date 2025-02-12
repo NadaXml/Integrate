@@ -80,27 +80,27 @@ namespace UIDocument.Script.Core.ADT {
         }
         
         public void AddSpeedValueAffect(int value) {
-            speed.AddSpeedValueAffect(value);
+            speed.attribute.AddValueAffect(value);
             ApplySpeedEffect();
         }
 
         public void RemoveSpeedValueAffect(int value) {
-            speed.RemoveSpeedValueAffect(value);
+            speed.attribute.RemoveValueAffect(value);
             ApplySpeedEffect();
         }
         
         public void AddSpeedPercentAffect(int percent) {
-            speed.AddSpeedPercentAffect(percent);
+            speed.attribute.AddPercentAffect(percent);
             ApplySpeedEffect();
         }
 
         public void RemoveSpeedPercentAffect(int percent) {
-            speed.RemoveSpeedPercentAffect(percent);
+            speed.attribute.RemovePercentAffect(percent);
             ApplySpeedEffect();
         }
         
         public void AdvanceActionValueP(int p) {  // 是否立即结算？对结果有区别
-            var v = p * maxAction;
+            var v = p * 0.0001f * maxAction;
             if (currentAction > v) {
                 currentAction -= v;
             }
@@ -110,13 +110,13 @@ namespace UIDocument.Script.Core.ADT {
         }
 
         public void DelayActionValueP(int p) { // 是否立即结算？对结果有区别
-            var v = p * maxAction;
+            var v = p * 0.0001f * maxAction;
             currentAction += v;
         }
         
         public void ApplySpeedEffect() {
-            int prevValue = speed.value;
-            int postValue = speed.Apply();
+            int prevValue = speed.attribute.value;
+            int postValue = speed.attribute.Apply();
             if (postValue != prevValue) { // 速度变化，影响最大行动值，当期最大
                 var prevMaxAction = maxAction;
                 maxAction = ActionValue.FromSpeed(speed);

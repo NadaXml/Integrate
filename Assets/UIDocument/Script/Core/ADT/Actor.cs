@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using UIDocument.Script.Core.Config;
 using UIDocument.Script.EventService;
+using UnityEngine.Assertions;
 namespace UIDocument.Script.Core.ADT {
     
     public class Actor {
@@ -10,10 +9,9 @@ namespace UIDocument.Script.Core.ADT {
         }
 
         public ulong sequenceId;
-
         public ulong battleComponentRef;
-
         public ulong moveComponentRef;
+        
         public ActorContext context { get; set; }
         ulong _componentId;
 
@@ -22,6 +20,9 @@ namespace UIDocument.Script.Core.ADT {
         }
 
         public ulong AllocateComponentId() {
+            #if DEBUG
+                Assert.IsTrue(_componentId < ulong.MaxValue);
+            #endif
             return _componentId++;
         }
     }

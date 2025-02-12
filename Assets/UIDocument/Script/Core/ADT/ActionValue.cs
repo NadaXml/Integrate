@@ -4,16 +4,6 @@ using System;
 namespace UIDocument.Script.Core.ADT {
     [Serializable]
     public struct ActionValue : IDumpable, IComparable<ActionValue>, IEquatable<ActionValue> {
-        public bool Equals(ActionValue other) {
-            return value == other.value;
-        }
-        public override bool Equals(object obj) {
-            return obj is ActionValue other && Equals(other);
-        }
-        public override int GetHashCode() {
-            return value;
-        }
-
         /// <summary>
         /// 行动值：放大100倍的周期
         /// </summary>
@@ -28,11 +18,18 @@ namespace UIDocument.Script.Core.ADT {
         /// <returns></returns>
         public static ActionValue FromSpeed(in Speed speed) {
             return new ActionValue() {
-                value = C_Action_Param / speed.value
+                value = C_Action_Param / speed.attribute.value
             };
         }
-
+        
         public static ActionValue Zero = ActionValue.FromValue(0);
+        
+        public bool IsPass() {
+            return value <= 0;
+        }
+        public string Dump() {
+            return value.ToString();
+        }
         
         /// <summary>
         /// 行动值
@@ -99,13 +96,17 @@ namespace UIDocument.Script.Core.ADT {
         public static bool operator <=(ActionValue left, ActionValue right) {
             return left.value <= right.value;
         }
-
-        public bool IsPass() {
-            return value <= 0;
+        
+        public bool Equals(ActionValue other) {
+            return value == other.value;
         }
-        public string Dump() {
-            return value.ToString();
+        public override bool Equals(object obj) {
+            return obj is ActionValue other && Equals(other);
         }
+        public override int GetHashCode() {
+            return value;
+        }
+        
         public int CompareTo(ActionValue other) {
             return value - other.value;
         }
