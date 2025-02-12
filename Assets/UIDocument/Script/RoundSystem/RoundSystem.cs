@@ -165,7 +165,7 @@ namespace UIDocument.Script.RoundSystem {
 
             int index = FindMoveComponentIndexByActor(evt.actorSequenceId);
             unsafe {
-                if(index > 0) {
+                if(index >= 0) {
                     var prt = (MoveComponent*)_moveComponents.GetUnsafePtr();
                     prt[index].AdvanceActionValueP(evt.p);
                 }
@@ -237,11 +237,17 @@ namespace UIDocument.Script.RoundSystem {
             unsafe {
                 // 目前是认为瞬间执行，立刻重新开始回合
                 int index = FindMoveComponentIndex(component.position);
-                if (index > -1) {
+                if (index >= 0) {
                     var temp = (MoveComponent*)_moveComponents.GetUnsafePtr();
                     temp[index].Reset();
                 }
             }
+            
+            // 自拉条
+            var evt3 = new ActionValueChangeEvent();
+            evt3.actorSequenceId = 0;
+            evt3.p = 3333;
+            _eventServiceProvider.GetEventService().TriggerEvent(this, EventNameDef.N_ActionValueChange, evt3);
             
             if (_actionMoves.Count == 0) {
                 _roundContext.status = RoundStatus.Running;

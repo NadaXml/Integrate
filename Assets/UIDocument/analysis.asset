@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: analysis
   m_EditorClassIdentifier: 
   counter:
-  - actorSequence: 1
-    position: 2
-    moveCount: 2
-    totalDmg: 0
   - actorSequence: 0
     position: 1
-    moveCount: 1
+    moveCount: 13
+    totalDmg: 0
+  - actorSequence: 1
+    position: 2
+    moveCount: 7
     totalDmg: 0
