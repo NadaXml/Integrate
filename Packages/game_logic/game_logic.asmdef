@@ -1,0 +1,19 @@
+{
+    "name": "game_logic",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f47197df73d74e54eadcec2d5b316a15",
+        "GUID:c18a4ef87a2941df9f177b9d7c11da6d",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "game_adt"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

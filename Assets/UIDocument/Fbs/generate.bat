@@ -1,1 +1,0 @@
-.\flatc.exe --csharp -o ..\..\ .\MoveComponentStream.fbs

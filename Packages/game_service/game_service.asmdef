@@ -1,0 +1,20 @@
+{
+    "name": "game_service",
+    "rootNamespace": "",
+    "references": [
+        "game_fund",
+        "YooAsset",
+        "UniTask",
+        "UniTask.YooAsset",
+        "game_adt"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

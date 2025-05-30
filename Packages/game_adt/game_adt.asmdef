@@ -1,0 +1,16 @@
+{
+    "name": "game_adt",
+    "rootNamespace": "",
+    "references": [
+        "GUID:668660b91b4e97642a637ad8c492f041"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

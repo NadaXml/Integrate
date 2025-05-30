@@ -347,6 +347,9 @@
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>D:\fork\Integrate\Library\PackageCache\com.unity.collab-proxy@2.6.0\Lib\Editor\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>D:\fork\Integrate\Assets\Plugins\NLog\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="log4netPlastic">
       <HintPath>D:\fork\Integrate\Library\PackageCache\com.unity.collab-proxy@2.6.0\Lib\Editor\log4netPlastic.dll</HintPath>
     </Reference>

@@ -11,6 +11,13 @@
       },
       "hash": "f7df4966aa30482fb739148aba2bc7bc672dfaf6"
     },
+    "com.code-philosophy.luban": {
+      "version": "https://github.com/focus-creative-games/luban_unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "57e577126c4bac9abef927babb848a457ad5d563"
+    },
     "com.google.flatbuffer": {
       "version": "file:FlatBuffer",
       "depth": 0,
@@ -252,6 +259,30 @@
       "source": "git",
       "dependencies": {},
       "hash": "657868960eb569a5943117f1458bf2aee813d8c8"
+    },
+    "game_adt": {
+      "version": "file:game_adt",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "game_fund": {
+      "version": "file:game_fund",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "game_logic": {
+      "version": "file:game_logic",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "game_service": {
+      "version": "file:game_service",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "org.nuget.scriban": {
       "version": "file:org.nuget.scriban@5.10.0",
