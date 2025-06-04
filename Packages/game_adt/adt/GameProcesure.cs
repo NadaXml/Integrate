@@ -7,6 +7,8 @@ namespace adt {
         UpdatePackageVersion,
         UpdatePackageManifest,
         
+        AssetLoad,
+        
         Cancel,
         Success,
     }

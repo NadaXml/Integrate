@@ -19,17 +19,17 @@ public struct ActionValue : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ActionValue __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int Value { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int V { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<cfg.ActionValue> CreateActionValue(FlatBufferBuilder builder,
-      int value = 0) {
+      int v = 0) {
     builder.StartTable(1);
-    ActionValue.AddValue(builder, value);
+    ActionValue.AddV(builder, v);
     return ActionValue.EndActionValue(builder);
   }
 
   public static void StartActionValue(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddValue(FlatBufferBuilder builder, int value) { builder.AddInt(0, value, 0); }
+  public static void AddV(FlatBufferBuilder builder, int v) { builder.AddInt(0, v, 0); }
   public static Offset<cfg.ActionValue> EndActionValue(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<cfg.ActionValue>(o);
@@ -42,7 +42,7 @@ static public class ActionValueVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*Value*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 4 /*V*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

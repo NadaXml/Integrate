@@ -19,20 +19,20 @@ public struct Speed : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Speed __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public cfg.Attr? Value { get { int o = __p.__offset(4); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public cfg.Attr? V { get { int o = __p.__offset(4); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<cfg.Speed> CreateSpeed(FlatBufferBuilder builder,
-      Offset<cfg.Attr> valueOffset = default(Offset<cfg.Attr>)) {
+      Offset<cfg.Attr> vOffset = default(Offset<cfg.Attr>)) {
     builder.StartTable(1);
-    Speed.AddValue(builder, valueOffset);
+    Speed.AddV(builder, vOffset);
     return Speed.EndSpeed(builder);
   }
 
   public static void StartSpeed(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddValue(FlatBufferBuilder builder, Offset<cfg.Attr> valueOffset) { builder.AddOffset(0, valueOffset.Value, 0); }
+  public static void AddV(FlatBufferBuilder builder, Offset<cfg.Attr> vOffset) { builder.AddOffset(0, vOffset.Value, 0); }
   public static Offset<cfg.Speed> EndSpeed(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    builder.Required(o, 4);  // value
+    builder.Required(o, 4);  // v
     return new Offset<cfg.Speed>(o);
   }
 }
@@ -43,7 +43,7 @@ static public class SpeedVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyTable(tablePos, 4 /*Value*/, cfg.AttrVerify.Verify, true)
+      && verifier.VerifyTable(tablePos, 4 /*V*/, cfg.AttrVerify.Verify, true)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

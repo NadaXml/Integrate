@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using game_fund;
 using game_logic.system;
 using System.Threading;
+using UnityEngine;
 
 namespace game_logic {
     public class GameApp : App {
@@ -40,8 +41,8 @@ namespace game_logic {
         }
         
         async UniTask<GameProcedure> CreateSystems(CancellationTokenSource cancelSource) {
-            GameProcedure ret = GameProcedure.None;
-            CreateSystem<Mission>();
+            GameProcedure ret = GameProcedure.None; 
+            gameContext.missionSystem = CreateSystem<Mission>();
             ret = GameProcedure.Success;
             return ret;
         }
@@ -74,6 +75,7 @@ namespace game_logic {
             if (ret != GameProcedure.Success) {
                 return ret;
             }
+            gameContext.assetService = assetService;
             return ret;
         }
         
@@ -100,8 +102,10 @@ namespace game_logic {
             if (ret != GameProcedure.Success) {
                 return ret;
             }
-
-            gameContext.missionSystem.CreateMission();
+            
+            Debug.Log("crate mission frame " + Time.frameCount);
+            ret = await gameContext.missionSystem.CreateMission();
+            Debug.Log("crate mission over frame" + Time.frameCount);
             
             return ret;
         }

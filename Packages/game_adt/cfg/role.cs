@@ -20,53 +20,46 @@ public struct role : IFlatbufferObject
   public role __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string Name { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(6, 1); }
-#else
-  public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(6); }
-#endif
-  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(6); }
-  public cfg.Attr? Atk { get { int o = __p.__offset(8); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public cfg.Attr? Def { get { int o = __p.__offset(10); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public cfg.Attr? Hp { get { int o = __p.__offset(12); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public cfg.Speed? Speed { get { int o = __p.__offset(14); return o != 0 ? (cfg.Speed?)(new cfg.Speed()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public cfg.Vector3? Pos { get { int o = __p.__offset(16); return o != 0 ? (cfg.Vector3?)(new cfg.Vector3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public float Name { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public int EquipId { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public cfg.Speed? Speed { get { int o = __p.__offset(10); return o != 0 ? (cfg.Speed?)(new cfg.Speed()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public cfg.Attr? Atk { get { int o = __p.__offset(12); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public cfg.Attr? Def { get { int o = __p.__offset(14); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public cfg.Attr? Hp { get { int o = __p.__offset(16); return o != 0 ? (cfg.Attr?)(new cfg.Attr()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<cfg.role> Createrole(FlatBufferBuilder builder,
       int id = 0,
-      StringOffset nameOffset = default(StringOffset),
+      float name = 0.0f,
+      int equip_id = 0,
+      Offset<cfg.Speed> speedOffset = default(Offset<cfg.Speed>),
       Offset<cfg.Attr> atkOffset = default(Offset<cfg.Attr>),
       Offset<cfg.Attr> defOffset = default(Offset<cfg.Attr>),
-      Offset<cfg.Attr> hpOffset = default(Offset<cfg.Attr>),
-      Offset<cfg.Speed> speedOffset = default(Offset<cfg.Speed>),
-      Offset<cfg.Vector3> posOffset = default(Offset<cfg.Vector3>)) {
+      Offset<cfg.Attr> hpOffset = default(Offset<cfg.Attr>)) {
     builder.StartTable(7);
-    role.AddPos(builder, posOffset);
-    role.AddSpeed(builder, speedOffset);
     role.AddHp(builder, hpOffset);
     role.AddDef(builder, defOffset);
     role.AddAtk(builder, atkOffset);
-    role.AddName(builder, nameOffset);
+    role.AddSpeed(builder, speedOffset);
+    role.AddEquipId(builder, equip_id);
+    role.AddName(builder, name);
     role.AddId(builder, id);
     return role.Endrole(builder);
   }
 
   public static void Startrole(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
-  public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(1, nameOffset.Value, 0); }
-  public static void AddAtk(FlatBufferBuilder builder, Offset<cfg.Attr> atkOffset) { builder.AddOffset(2, atkOffset.Value, 0); }
-  public static void AddDef(FlatBufferBuilder builder, Offset<cfg.Attr> defOffset) { builder.AddOffset(3, defOffset.Value, 0); }
-  public static void AddHp(FlatBufferBuilder builder, Offset<cfg.Attr> hpOffset) { builder.AddOffset(4, hpOffset.Value, 0); }
-  public static void AddSpeed(FlatBufferBuilder builder, Offset<cfg.Speed> speedOffset) { builder.AddOffset(5, speedOffset.Value, 0); }
-  public static void AddPos(FlatBufferBuilder builder, Offset<cfg.Vector3> posOffset) { builder.AddOffset(6, posOffset.Value, 0); }
+  public static void AddName(FlatBufferBuilder builder, float name) { builder.AddFloat(1, name, 0.0f); }
+  public static void AddEquipId(FlatBufferBuilder builder, int equipId) { builder.AddInt(2, equipId, 0); }
+  public static void AddSpeed(FlatBufferBuilder builder, Offset<cfg.Speed> speedOffset) { builder.AddOffset(3, speedOffset.Value, 0); }
+  public static void AddAtk(FlatBufferBuilder builder, Offset<cfg.Attr> atkOffset) { builder.AddOffset(4, atkOffset.Value, 0); }
+  public static void AddDef(FlatBufferBuilder builder, Offset<cfg.Attr> defOffset) { builder.AddOffset(5, defOffset.Value, 0); }
+  public static void AddHp(FlatBufferBuilder builder, Offset<cfg.Attr> hpOffset) { builder.AddOffset(6, hpOffset.Value, 0); }
   public static Offset<cfg.role> Endrole(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    builder.Required(o, 8);  // atk
-    builder.Required(o, 10);  // def
-    builder.Required(o, 12);  // hp
-    builder.Required(o, 14);  // speed
-    builder.Required(o, 16);  // pos
+    builder.Required(o, 10);  // speed
+    builder.Required(o, 12);  // atk
+    builder.Required(o, 14);  // def
+    builder.Required(o, 16);  // hp
     return new Offset<cfg.role>(o);
   }
 }
@@ -78,12 +71,12 @@ static public class roleVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*Id*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 6 /*Name*/, false)
-      && verifier.VerifyTable(tablePos, 8 /*Atk*/, cfg.AttrVerify.Verify, true)
-      && verifier.VerifyTable(tablePos, 10 /*Def*/, cfg.AttrVerify.Verify, true)
-      && verifier.VerifyTable(tablePos, 12 /*Hp*/, cfg.AttrVerify.Verify, true)
-      && verifier.VerifyTable(tablePos, 14 /*Speed*/, cfg.SpeedVerify.Verify, true)
-      && verifier.VerifyTable(tablePos, 16 /*Pos*/, cfg.Vector3Verify.Verify, true)
+      && verifier.VerifyField(tablePos, 6 /*Name*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*EquipId*/, 4 /*int*/, 4, false)
+      && verifier.VerifyTable(tablePos, 10 /*Speed*/, cfg.SpeedVerify.Verify, true)
+      && verifier.VerifyTable(tablePos, 12 /*Atk*/, cfg.AttrVerify.Verify, true)
+      && verifier.VerifyTable(tablePos, 14 /*Def*/, cfg.AttrVerify.Verify, true)
+      && verifier.VerifyTable(tablePos, 16 /*Hp*/, cfg.AttrVerify.Verify, true)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

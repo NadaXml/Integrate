@@ -18,5 +18,9 @@ namespace asset_service {
         public void Dispose() {
             assetHandle.Release();
         }
+
+        public bool IsSucceed() {
+            return assetHandle.Status == EOperationStatus.Succeed;
+        }
     }
 }

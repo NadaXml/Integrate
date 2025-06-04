@@ -15,7 +15,7 @@ namespace SRSandBox.Scripts {
         }
 
         void OnDestroy() {
-            app.End();
+            app?.End();
             app = null;
         }
     }

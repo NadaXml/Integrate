@@ -1,0 +1,62 @@
+namespace cfg;
+
+
+
+table ActionValue {
+    v:int32;
+}
+table Attr {
+    v_final:int32;
+    v_base:int32;
+    v_affect:int32;
+    p_affect:int32;
+    dirty:bool;
+}
+table role {
+    id:int32;
+    name:float32;
+    equip_id:int32;
+    speed:Speed(required);
+    atk:Attr(required);
+    def:Attr(required);
+    hp:Attr(required);
+}
+table setting {
+    id:int32;
+    role_id:int32;
+    index:int32;
+}
+table Speed {
+    v:Attr(required);
+}
+table Vector2 {
+    x:float32;
+    y:float32;
+}
+table Vector3 {
+    x:float32;
+    y:float32;
+    z:float32;
+}
+table Vector4 {
+    x:float32;
+    y:float32;
+    z:float32;
+    w:float32;
+}
+
+
+table Tbrole {
+    // WARN! The name 'data_list' is used by FlatBuffersJsonExporter. don't modify it!
+    data_list:[role](required);
+}
+
+root_type Tbrole;
+table Tbsetting {
+    // WARN! The name 'data_list' is used by FlatBuffersJsonExporter. don't modify it!
+    data_list:[setting](required);
+}
+
+root_type Tbsetting;
+
+

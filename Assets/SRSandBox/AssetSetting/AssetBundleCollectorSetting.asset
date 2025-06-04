@@ -53,3 +53,11 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/SRSandBox/Data/Config
+        CollectorGUID: 22ba57d4e0c54bc1bc7fff572e8f3a38
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

@@ -19,32 +19,32 @@ public struct Attr : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Attr __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int Value { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int BaseValue { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int ValueAffect { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int PercentAffect { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int VFinal { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int VBase { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int VAffect { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int PAffect { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public bool Dirty { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<cfg.Attr> CreateAttr(FlatBufferBuilder builder,
-      int value = 0,
-      int base_value = 0,
-      int value_affect = 0,
-      int percent_affect = 0,
+      int v_final = 0,
+      int v_base = 0,
+      int v_affect = 0,
+      int p_affect = 0,
       bool dirty = false) {
     builder.StartTable(5);
-    Attr.AddPercentAffect(builder, percent_affect);
-    Attr.AddValueAffect(builder, value_affect);
-    Attr.AddBaseValue(builder, base_value);
-    Attr.AddValue(builder, value);
+    Attr.AddPAffect(builder, p_affect);
+    Attr.AddVAffect(builder, v_affect);
+    Attr.AddVBase(builder, v_base);
+    Attr.AddVFinal(builder, v_final);
     Attr.AddDirty(builder, dirty);
     return Attr.EndAttr(builder);
   }
 
   public static void StartAttr(FlatBufferBuilder builder) { builder.StartTable(5); }
-  public static void AddValue(FlatBufferBuilder builder, int value) { builder.AddInt(0, value, 0); }
-  public static void AddBaseValue(FlatBufferBuilder builder, int baseValue) { builder.AddInt(1, baseValue, 0); }
-  public static void AddValueAffect(FlatBufferBuilder builder, int valueAffect) { builder.AddInt(2, valueAffect, 0); }
-  public static void AddPercentAffect(FlatBufferBuilder builder, int percentAffect) { builder.AddInt(3, percentAffect, 0); }
+  public static void AddVFinal(FlatBufferBuilder builder, int vFinal) { builder.AddInt(0, vFinal, 0); }
+  public static void AddVBase(FlatBufferBuilder builder, int vBase) { builder.AddInt(1, vBase, 0); }
+  public static void AddVAffect(FlatBufferBuilder builder, int vAffect) { builder.AddInt(2, vAffect, 0); }
+  public static void AddPAffect(FlatBufferBuilder builder, int pAffect) { builder.AddInt(3, pAffect, 0); }
   public static void AddDirty(FlatBufferBuilder builder, bool dirty) { builder.AddBool(4, dirty, false); }
   public static Offset<cfg.Attr> EndAttr(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -58,10 +58,10 @@ static public class AttrVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*Value*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 6 /*BaseValue*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 8 /*ValueAffect*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 10 /*PercentAffect*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 4 /*VFinal*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 6 /*VBase*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*VAffect*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 10 /*PAffect*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 12 /*Dirty*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }

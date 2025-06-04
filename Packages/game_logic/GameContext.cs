@@ -3,6 +3,8 @@ using game_fund;
 using game_logic.system;
 using System;
 using System.Collections.Generic;
+using data_service;
+
 namespace game_logic {
     public class GameContext {
         public Asset.AssetParam AssetParam;
@@ -55,6 +57,7 @@ namespace game_logic {
 
         HashSet<WeakReference<IService>> services;
         public Asset assetService;
+        public Data dataService;
         
         /// <summary>
         /// 注册服务

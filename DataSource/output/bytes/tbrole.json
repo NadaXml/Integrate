@@ -1,0 +1,74 @@
+{
+  "data_list": [
+    {
+      "id": 1,
+      "name": 3.5,
+      "equip_id": 1,
+      "speed": {
+        "v": {
+          "v_final": 0,
+          "v_base": 40,
+          "v_affect": 0,
+          "p_affect": 0,
+          "dirty": false
+        }
+      },
+      "atk": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      },
+      "def": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      },
+      "hp": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      }
+    },
+    {
+      "id": 2,
+      "name": 554,
+      "equip_id": 2,
+      "speed": {
+        "v": {
+          "v_final": 0,
+          "v_base": 40,
+          "v_affect": 0,
+          "p_affect": 0,
+          "dirty": false
+        }
+      },
+      "atk": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      },
+      "def": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      },
+      "hp": {
+        "v_final": 0,
+        "v_base": 40,
+        "v_affect": 0,
+        "p_affect": 0,
+        "dirty": false
+      }
+    }
+  ]
+}
