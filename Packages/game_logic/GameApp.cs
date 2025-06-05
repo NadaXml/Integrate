@@ -1,6 +1,7 @@
 using adt;
 using asset_service;
 using Cysharp.Threading.Tasks;
+using data_module;
 using game_fund;
 using game_logic.system;
 using System.Threading;
@@ -84,6 +85,33 @@ namespace game_logic {
         }
         
   #endregion
+        
+        #region GameModule
+
+        void DestroyModule(IModule module) {
+            gameContext.UnRegisterModule(module);
+            module.Destroy();
+        }
+
+        T CreateModule<T>() where T : GameModule, new() {
+            T module = new T();
+            gameContext.RegisterModule(module);
+            module.Awake();
+            return module;
+        }
+
+        async UniTask<GameProcedure> CreateModule(CancellationToken cts) {
+            GameProcedure ret = GameProcedure.None;
+            var dataModule = CreateModule<Data>();
+            ret = await dataModule.Init(cts);
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
+            gameContext.dataModule = dataModule;
+            return ret;
+        }
+        
+        #endregion
 
         CancellationTokenSource ctsForStart;
         

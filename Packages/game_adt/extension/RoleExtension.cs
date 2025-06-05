@@ -15,28 +15,10 @@ namespace extension {
             };
             return data;
         }
-
-        public static string templateTxt = @"
-{{func expandList }}
-    {{ if $0 | object.typeof == ""array"" }}
-        {{~ for kv in $0 ~}}
-            {{ kv.kk }} = {{ expandList kv.vv }}
-        {{~ end ~}}
-    {{ else }}
-        {{ $0 }}
-    {{ end }}
-{{ end }}
-
-
-
-{{~ for kv in data ~}}
-    {{ kv.kk }} = {{ expandList kv.vv }}
-{{~ end ~}}
-";
         
         public static string Dump(this role role) {
-            var template = Template.Parse(templateTxt);
-            var result = template.Render(new {data = role.ToDumpList()});
+            var template = Template.Parse(TemplateDefine.ObjectKeyValueTemplate);
+            var result = template.Render(new {model = role.ToDumpList()});
             return result;
         }
     }

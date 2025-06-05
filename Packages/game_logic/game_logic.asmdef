@@ -5,8 +5,9 @@
         "GUID:f47197df73d74e54eadcec2d5b316a15",
         "GUID:c18a4ef87a2941df9f177b9d7c11da6d",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "game_adt",
-        "FlatBuffers"
+        "GUID:9c99f2662de28e24d8cac62f2b6b4a3b",
+        "GUID:668660b91b4e97642a637ad8c492f041",
+        "GUID:3de88c88fbbb8f944b9210d496af9762"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

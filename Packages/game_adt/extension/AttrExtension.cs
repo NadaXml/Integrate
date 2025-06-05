@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using Scriban;
 namespace extension {
     public static class AttrExtension {
         public static object[] ToDumpList(this cfg.Attr attr) {
@@ -12,8 +12,10 @@ namespace extension {
             return data;
         }
         
-        public static string Dump(this cfg.Attr role) {
-            return string.Empty;
+        public static string Dump(this cfg.Attr attr) {
+            var template = Template.Parse(TemplateDefine.ObjectKeyValueTemplate);
+            var result = template.Render(new {model = attr.ToDumpList()});
+            return result;
         }
     }
 }

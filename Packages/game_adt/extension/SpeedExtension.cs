@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using cfg;
+using Scriban;
 namespace extension {
     public static class SpeedExtension {
         public static object[] ToDumpList(this cfg.Speed speed) {
@@ -9,7 +10,9 @@ namespace extension {
         }
         
         public static string Dump(this cfg.Speed speed) {
-            return string.Empty;
+            var template = Template.Parse(TemplateDefine.ObjectKeyValueTemplate);
+            var result = template.Render(new {model = speed.ToDumpList()});
+            return result;
         }
     }
 }

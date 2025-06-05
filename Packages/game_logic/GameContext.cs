@@ -1,9 +1,9 @@
 using asset_service;
+using data_module;
 using game_fund;
 using game_logic.system;
 using System;
 using System.Collections.Generic;
-using data_service;
 
 namespace game_logic {
     public class GameContext {
@@ -53,11 +53,30 @@ namespace game_logic {
             
         #endregion
 
+        #region Module
+        
+        HashSet<WeakReference<IModule>> modules;
+        public Data dataModule;
+
+        public void RegisterModule(IModule module) {
+            modules.Add(new WeakReference<IModule>(module));
+        }
+
+        public void UnRegisterModule(IModule module) {
+            modules.RemoveWhere((weakRef) => {
+                if (weakRef.TryGetTarget(out var weakObj)) {
+                    return weakObj == module;
+                }
+                return false;
+            });
+        }
+        
+        #endregion
+        
         #region Services
 
         HashSet<WeakReference<IService>> services;
         public Asset assetService;
-        public Data dataService;
         
         /// <summary>
         /// 注册服务
