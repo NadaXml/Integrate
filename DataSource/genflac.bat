@@ -9,8 +9,13 @@ set OUTPUT_CS=%WORKSPACE%\Packages\game_adt
 rem gen csharp code
 @REM %FLATC% -I schemas --gen-object-api --csharp -o %OUPUT_DIR% %SCHEMA_FILE%
 
+del /q "%OUTPUT_CS%\cfg\*"
+
 %FLATC% -I schemas --csharp -o %OUTPUT_CS% %SCHEMA_FILE%
+
+del /q "%OUTPUT_DATA%\*"
 
 rem json to bin
 %FLATC% -o %OUTPUT_DATA% --binary %SCHEMA_FILE% --root-type cfg.Tbrole %DATA_DIR%\tbrole.json
 %FLATC% -o %OUTPUT_DATA% --binary %SCHEMA_FILE% --root-type cfg.Tbsetting %DATA_DIR%\tbsetting.json
+%FLATC% -o %OUTPUT_DATA% --binary %SCHEMA_FILE% --root-type cfg.Tbmission %DATA_DIR%\tbmission.json

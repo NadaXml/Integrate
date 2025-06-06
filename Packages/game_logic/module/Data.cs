@@ -15,47 +15,51 @@ namespace data_module {
         #region 表格
         public Tbsetting tbsetting;
         public Tbrole tbrole;
+        public Tbmission tbmission;
         #endregion
 
         #region 游戏数据
-        public BattleField battleField;
-        public Dictionary<int, Actor> actors; 
+        public SimulationData simulationData { get; set; }
         #endregion
         
         public async UniTask<GameProcedure> Init(CancellationToken cts) {
             return GameProcedure.Success;
         }
-        
-        public async UniTask<GameProcedure> LoadMissionCfg() {
-            // TODO 关联，用于数据加载和卸载均衡
-            string location = @"tbsetting";
-            string locationRole = @"tbrole";
 
-            GameProcedure ret = GameProcedure.None;
-            
-            // TODO 理论上这里是需要进行句柄的生命周期管理，这里保存的tb可能会失效
-            using (var resHandleRole = GameContext.assetService.LoadAssetAsync<FlatBufferBinary>(locationRole)) {
+        public async UniTask<FlatBufferBinary> LoadConfigFlatBufferBinary(string location) {
+            using (var resHandleRole = GameContext.assetService.LoadAssetAsync<FlatBufferBinary>(location)) {
                 await resHandleRole.ToUniTask();
                 if (resHandleRole.IsSucceed()) {
-                    var flatBufferBinaryRole = resHandleRole.GetAsset<FlatBufferBinary>();
-                    tbrole = Tbrole.GetRootAsTbrole(new ByteBuffer(flatBufferBinaryRole.bytes));
-                }
-                else {
-                    return GameProcedure.AssetLoad;
+                    return resHandleRole.GetAsset<FlatBufferBinary>();
                 }
             }
+            return null;
+        }
 
-            using (var resHandle = GameContext.assetService.LoadAssetAsync<FlatBufferBinary>(location)) {
-                await resHandle.ToUniTask();
-                if (resHandle.IsSucceed()) {
-                    var flatBufferBinarySetting = resHandle.GetAsset<FlatBufferBinary>();
-                    tbsetting = Tbsetting.GetRootAsTbsetting(new ByteBuffer(flatBufferBinarySetting.bytes));
-                }
-                else {
-                    return GameProcedure.AssetLoad;
-                }
+        public async UniTask<GameProcedure> LoadMissionCfg() {
+            GameProcedure ret = GameProcedure.None;
+
+            FlatBufferBinary temp;
+            // TODO 关联，用于数据加载和卸载均衡
+            // TODO 理论上这里是需要进行句柄的生命周期管理，这里保存的tb可能会失效
+            // TODO 数据层加载释放管理
+            temp = await LoadConfigFlatBufferBinary("tbrole");
+            if (temp == null) {
+                return GameProcedure.AssetLoad;
             }
-            // 数据层加载释放管理
+            tbrole = Tbrole.GetRootAsTbrole(new ByteBuffer(temp.bytes));
+
+            temp = await LoadConfigFlatBufferBinary("tbsetting");
+            if (temp == null) {
+                return GameProcedure.AssetLoad;
+            }
+            tbsetting = Tbsetting.GetRootAsTbsetting(new ByteBuffer(temp.bytes));
+            
+            temp = await LoadConfigFlatBufferBinary("tbmission");
+            if (temp == null) {
+                return GameProcedure.AssetLoad;
+            }
+            tbmission = Tbmission.GetRootAsTbmission(new ByteBuffer(temp.bytes));
             return ret;
         }
     }

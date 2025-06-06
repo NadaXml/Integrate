@@ -23,13 +23,16 @@ public struct AttrGroup : IFlatbufferObject
   public int Def { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public int Hp { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public int Energy { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int Speed { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<cfg.AttrGroup> CreateAttrGroup(FlatBufferBuilder builder,
       int atk = 0,
       int def = 0,
       int hp = 0,
-      int energy = 0) {
-    builder.StartTable(4);
+      int energy = 0,
+      int speed = 0) {
+    builder.StartTable(5);
+    AttrGroup.AddSpeed(builder, speed);
     AttrGroup.AddEnergy(builder, energy);
     AttrGroup.AddHp(builder, hp);
     AttrGroup.AddDef(builder, def);
@@ -37,11 +40,12 @@ public struct AttrGroup : IFlatbufferObject
     return AttrGroup.EndAttrGroup(builder);
   }
 
-  public static void StartAttrGroup(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartAttrGroup(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddAtk(FlatBufferBuilder builder, int atk) { builder.AddInt(0, atk, 0); }
   public static void AddDef(FlatBufferBuilder builder, int def) { builder.AddInt(1, def, 0); }
   public static void AddHp(FlatBufferBuilder builder, int hp) { builder.AddInt(2, hp, 0); }
   public static void AddEnergy(FlatBufferBuilder builder, int energy) { builder.AddInt(3, energy, 0); }
+  public static void AddSpeed(FlatBufferBuilder builder, int speed) { builder.AddInt(4, speed, 0); }
   public static Offset<cfg.AttrGroup> EndAttrGroup(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<cfg.AttrGroup>(o);
@@ -58,6 +62,7 @@ static public class AttrGroupVerify
       && verifier.VerifyField(tablePos, 6 /*Def*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 8 /*Hp*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 10 /*Energy*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*Speed*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

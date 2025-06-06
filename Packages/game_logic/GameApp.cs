@@ -136,12 +136,16 @@ namespace game_logic {
             Debug.Log("crate mission over frame" + Time.frameCount);
 
             gameContext.procedure = ret;
-            
             return ret;
         }
 
         public void End() {
             ctsForStart.Cancel();
+
+            if (gameContext.missionSystem != null) {
+                gameContext.missionSystem.DestroyMission();
+            }
+            
             DestroySystems();
             DestroyServices();
             DestroyGameContext();

@@ -2,32 +2,31 @@ namespace cfg;
 
 
 
-table ActionValue {
-    v:int32;
+table AttrGroup {
+    atk:int32;
+    def:int32;
+    hp:int32;
+    energy:int32;
+    speed:int32;
 }
-table Attr {
-    v_final:int32;
-    v_base:int32;
-    v_affect:int32;
-    p_affect:int32;
-    dirty:bool;
+table mission {
+    id:int32;
+    name:string;
+    need_turn:int32;
+    max_turn:int32;
+    turn_action_value:int32;
+    first_trun_action_value:int32;
 }
 table role {
     id:int32;
-    name:float32;
+    name:string;
     equip_id:int32;
-    speed:Speed(required);
-    atk:Attr(required);
-    def:Attr(required);
-    hp:Attr(required);
+    attr_group:AttrGroup(required);
 }
 table setting {
     id:int32;
     role_id:int32;
     index:int32;
-}
-table Speed {
-    v:Attr(required);
 }
 table Vector2 {
     x:float32;
@@ -46,6 +45,12 @@ table Vector4 {
 }
 
 
+table Tbmission {
+    // WARN! The name 'data_list' is used by FlatBuffersJsonExporter. don't modify it!
+    data_list:[mission](required);
+}
+
+root_type Tbmission;
 table Tbrole {
     // WARN! The name 'data_list' is used by FlatBuffersJsonExporter. don't modify it!
     data_list:[role](required);

@@ -1,0 +1,20 @@
+{
+  "data_list": [
+    {
+      "id": 1,
+      "name": "第一关",
+      "need_turn": 5,
+      "max_turn": 10,
+      "turn_action_value": 100,
+      "first_trun_action_value": 150
+    },
+    {
+      "id": 2,
+      "name": "第二关",
+      "need_turn": 50,
+      "max_turn": 10,
+      "turn_action_value": 100,
+      "first_trun_action_value": 150
+    }
+  ]
+}

@@ -2,72 +2,26 @@
   "data_list": [
     {
       "id": 1,
-      "name": 3.5,
+      "name": "zzz",
       "equip_id": 1,
-      "speed": {
-        "v": {
-          "v_final": 0,
-          "v_base": 40,
-          "v_affect": 0,
-          "p_affect": 0,
-          "dirty": false
-        }
-      },
-      "atk": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
-      },
-      "def": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
-      },
-      "hp": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
+      "attr_group": {
+        "atk": 100,
+        "def": 120,
+        "hp": 3000,
+        "energy": 100,
+        "speed": 100
       }
     },
     {
       "id": 2,
-      "name": 554,
+      "name": "aaa",
       "equip_id": 2,
-      "speed": {
-        "v": {
-          "v_final": 0,
-          "v_base": 40,
-          "v_affect": 0,
-          "p_affect": 0,
-          "dirty": false
-        }
-      },
-      "atk": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
-      },
-      "def": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
-      },
-      "hp": {
-        "v_final": 0,
-        "v_base": 40,
-        "v_affect": 0,
-        "p_affect": 0,
-        "dirty": false
+      "attr_group": {
+        "atk": 200,
+        "def": 240,
+        "hp": 6000,
+        "energy": 160,
+        "speed": 140
       }
     }
   ]
