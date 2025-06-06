@@ -1,3 +1,4 @@
+using adt;
 using asset_service;
 using data_module;
 using game_fund;
@@ -7,7 +8,21 @@ using System.Collections.Generic;
 
 namespace game_logic {
     public class GameContext {
-        public Asset.AssetParam AssetParam;
+
+        public struct RunParam {
+            /// <summary>
+            /// 帧率
+            /// </summary>
+            public int frameRate;
+            /// <summary>
+            /// 帧计数
+            /// </summary>
+            public int frameCount;
+        }
+
+        public Asset.AssetParam assetParam;
+        public RunParam runParam;
+        public GameProcedure procedure = GameProcedure.None;
         
         public void Awake() {
             systems = new HashSet<WeakReference<ISystem>>();

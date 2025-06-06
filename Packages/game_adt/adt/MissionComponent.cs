@@ -1,5 +1,5 @@
 namespace adt {
-    public class MissionComponent {
+    public struct MissionComponent {
         
     }
 }

@@ -72,7 +72,7 @@ namespace game_logic {
         async UniTask<GameProcedure> CreateServices(CancellationTokenSource cts) {
             GameProcedure ret = GameProcedure.None;
             var assetService = CreateService<Asset>();
-            ret = await assetService.Init(gameContext.AssetParam, cts);
+            ret = await assetService.Init(gameContext.assetParam, cts);
             if (ret != GameProcedure.Success) {
                 return ret;
             }
@@ -121,7 +121,7 @@ namespace game_logic {
             
             GameProcedure ret = GameProcedure.None;
             CreateGameContext();
-            gameContext.AssetParam = assetParam;
+            gameContext.assetParam = assetParam;
             ret = await CreateServices(ctsForStart);
             if (ret != GameProcedure.Success) {
                 return ret;
@@ -134,6 +134,8 @@ namespace game_logic {
             Debug.Log("crate mission frame " + Time.frameCount);
             ret = await gameContext.missionSystem.CreateMission();
             Debug.Log("crate mission over frame" + Time.frameCount);
+
+            gameContext.procedure = ret;
             
             return ret;
         }
@@ -143,6 +145,22 @@ namespace game_logic {
             DestroySystems();
             DestroyServices();
             DestroyGameContext();
+        }
+
+        public void Tick() {
+            
+        }
+
+        public void SetFrameCount(int frameCount) {
+            gameContext.runParam.frameCount = frameCount;
+        }
+
+        public GameContext.RunParam GetRunParam() {
+            return gameContext.runParam;
+        }
+
+        public GameProcedure GetGameProcedure() {
+            return gameContext.procedure;
         }
     }
 }

@@ -1,6 +1,5 @@
 using cfg;
 using Scriban;
-using System.Collections.Generic;
 namespace extension {
     public static class RoleExtension {
 
@@ -8,10 +7,7 @@ namespace extension {
             object[] data = new object[] {
                 new { kk = "Id", vv = role.Id},
                 new { kk = "EquipId", vv = role.EquipId},
-                new { kk = "Speed", vv = role.Speed?.ToDumpList()},
-                new { kk = "Atk", vv = role.Atk?.ToDumpList()},
-                new { kk = "Def", vv = role.Def?.ToDumpList()},
-                new { kk = "Hp", vv = role.Hp?.ToDumpList()},
+                new { kk = "AttrGroup", vv = role.AttrGroup?.ToDumpList()},
             };
             return data;
         }
