@@ -22,6 +22,7 @@ namespace game_logic.system {
             await UniTask.DelayFrame(5);
 
             gameContext.dataModule.simulationData = new SimulationData();
+            gameContext.dataModule.simulationData.gameStatus = GameStatus.Prepare;
             
             ret = CreateBattleField();
             
@@ -30,6 +31,11 @@ namespace game_logic.system {
             }
             
             ret = CreateActor();
+
+            if (ret == GameProcedure.Success) {
+                gameContext.dataModule.simulationData.gameStatus = GameStatus.Running;
+            }
+            
             return ret;
         }
 
@@ -59,13 +65,8 @@ namespace game_logic.system {
                     }
                 }
                 var actor = new Actor() {
-                    action = new ActionComponent() {
-                        speed =  new Attr(role1.GetValueOrDefault().AttrGroup.GetValueOrDefault().Speed),
-                        position = setting.GetValueOrDefault().Index
-                    },
-                    battle = new BattleComponent() {
-                        attrGroup = adt.AttrGroup.FromCfg(role1?.AttrGroup)
-                    }
+                    action = ActionComponent.FromCfg(role1.GetValueOrDefault(), setting.GetValueOrDefault()),
+                    battle = BattleComponent.FromCfg(role1.GetValueOrDefault())
                 };
                 data.AddActor(actor);
             }
@@ -75,8 +76,23 @@ namespace game_logic.system {
         GameProcedure CreateBattleField() {
             SimulationData data = gameContext.dataModule.simulationData;
             BattleField battleField = new BattleField();
-            Tbmission tbmission = gameContext.dataModule.tbmission;
-            battleField.mission = new MissionComponent(ref tbmission);
+            cfg.Tbmission tbmission = gameContext.dataModule.tbmission;
+
+            for (int i = 0; i < tbmission.DataListLength; i++) {
+                cfg.mission? mission = tbmission.DataList(i);
+                if (mission?.Id == 1) {
+                    battleField.mission = new MissionComponent(mission.GetValueOrDefault());
+                }
+            }
+
+            var turns = new List<TurnComponent>(battleField.mission.mission.MaxTurn);
+            for (int i = 0; i < battleField.mission.mission.MaxTurn; i++) {
+                turns.Add(new TurnComponent() {
+                    roundActionValue = RoundActionValue.FromSpeed();
+                });
+            }
+            battleField.turns = turns;
+                
             data.battleField = battleField;
             return GameProcedure.Success;
         }

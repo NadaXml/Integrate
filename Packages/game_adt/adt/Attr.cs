@@ -1,5 +1,6 @@
+using System;
 namespace adt {
-    public struct Attr {
+    public struct Attr : IEquatable<Attr> {
         public int valueBase;
         public int valueFinal;
         public int valueAffect;
@@ -33,11 +34,23 @@ namespace adt {
             dirty = true;
         }
 
-        public int Apply() {
+        public void Apply() {
             if (dirty) {
                 valueFinal = (int)(valueBase * (1 * percentAffect * 0.0001f)) + valueAffect;
             }
-            return valueFinal;
+        }
+
+        public string Dump() {
+            return $"{{ valueBase = {valueBase}, valueFinal = {valueFinal}, valueAffect = {valueAffect} percentAffect = {percentAffect} dirty = {dirty} }}";
+        }
+        public bool Equals(Attr other) {
+            return valueFinal == other.valueFinal;
+        }
+        public override bool Equals(object obj) {
+            return obj is Attr other && Equals(other);
+        }
+        public override int GetHashCode() {
+            return valueFinal.GetHashCode();
         }
     }
 }

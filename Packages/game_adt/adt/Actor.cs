@@ -1,6 +1,10 @@
 namespace adt {
-    public class Actor {
+    public class Actor : IMove {
         public BattleComponent battle;
-        public ActionComponent action;
+        public ActionComponent action
+        {
+            get;
+            set;
+        }
     }
 }

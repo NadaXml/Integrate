@@ -3,6 +3,7 @@ using asset_service;
 using Cysharp.Threading.Tasks;
 using data_module;
 using game_fund;
+using game_logic.log_service;
 using game_logic.system;
 using System.Threading;
 using UnityEngine;
@@ -77,11 +78,19 @@ namespace game_logic {
                 return ret;
             }
             gameContext.assetService = assetService;
+
+            var logService = CreateService<NLogService>();
+            ret = await logService.Open(default);
+            gameContext.logService = logService;
+            
             return ret;
         }
         
         void DestroyServices() {
+            gameContext.assetService.Close();
             DestroyService(gameContext.assetService);
+            gameContext.logService.Close();
+            DestroyService(gameContext.logService);
         }
         
   #endregion
@@ -100,7 +109,7 @@ namespace game_logic {
             return module;
         }
 
-        async UniTask<GameProcedure> CreateModule(CancellationToken cts) {
+        async UniTask<GameProcedure> CreateModules(CancellationTokenSource cts) {
             GameProcedure ret = GameProcedure.None;
             var dataModule = CreateModule<Data>();
             ret = await dataModule.Init(cts);
@@ -126,6 +135,12 @@ namespace game_logic {
             if (ret != GameProcedure.Success) {
                 return ret;
             }
+
+            ret = await CreateModules(ctsForStart);
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
+            
             ret = await CreateSystems(ctsForStart);
             if (ret != GameProcedure.Success) {
                 return ret;

@@ -1,10 +1,10 @@
 using cfg;
 namespace adt {
     public struct MissionComponent {
-        public readonly Tbmission tbmission;
+        public readonly cfg.mission mission;
 
-        public MissionComponent(ref Tbmission tbmission) {
-            this.tbmission = tbmission;
+        public MissionComponent(in cfg.mission mission) {
+            this.mission = mission;
         }
     }
 }

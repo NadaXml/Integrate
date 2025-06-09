@@ -141,5 +141,11 @@ namespace asset_service {
         //         sceneHandle = sceneHandle
         //     };
         // }
+
+        public void Close() {
+            var package = YooAssets.GetPackage(param.packageName);
+            package.ForceUnloadAllAssets();
+            YooAssets.DestroyPackage(param.packageName);
+        }
     }
 }

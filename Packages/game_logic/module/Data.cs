@@ -13,16 +13,16 @@ namespace data_module {
     public class Data : GameModule {
 
         #region 表格
-        public Tbsetting tbsetting;
-        public Tbrole tbrole;
-        public Tbmission tbmission;
+        public cfg.Tbsetting tbsetting;
+        public cfg.Tbrole tbrole;
+        public cfg.Tbmission tbmission;
         #endregion
 
         #region 游戏数据
         public SimulationData simulationData { get; set; }
         #endregion
         
-        public async UniTask<GameProcedure> Init(CancellationToken cts) {
+        public async UniTask<GameProcedure> Init(CancellationTokenSource cts) {
             return GameProcedure.Success;
         }
 

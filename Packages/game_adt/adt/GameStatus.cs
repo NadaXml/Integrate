@@ -1,6 +1,8 @@
 namespace adt {
     public enum GameStatus {
         None = 0,
-        Running = 1,
+        Prepare = 1,
+        Running = 2,
+        End = 3
     }
 }

@@ -2,6 +2,7 @@ using adt;
 using asset_service;
 using data_module;
 using game_fund;
+using game_logic.log_service;
 using game_logic.system;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace game_logic {
         public void Awake() {
             systems = new HashSet<WeakReference<ISystem>>();
             services = new HashSet<WeakReference<IService>>();
+            modules = new HashSet<WeakReference<IModule>>();
         }
         public void Destroy() {
             if (systems != null) {
@@ -36,6 +38,10 @@ namespace game_logic {
             if (services != null) {
                 services.Clear();
                 services = null;
+            }
+            if (modules != null) {
+                modules.Clear();
+                modules = null;
             }
         }
 
@@ -92,6 +98,7 @@ namespace game_logic {
 
         HashSet<WeakReference<IService>> services;
         public Asset assetService;
+        public NLogService logService;
         
         /// <summary>
         /// 注册服务
