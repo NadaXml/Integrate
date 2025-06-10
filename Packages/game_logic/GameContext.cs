@@ -2,13 +2,14 @@ using adt;
 using asset_service;
 using data_module;
 using game_fund;
-using game_logic.log_service;
 using game_logic.system;
+using game_service;
+using log_service;
 using System;
 using System.Collections.Generic;
 
 namespace game_logic {
-    public class GameContext {
+    public class GameContext : IFunProvider {
 
         public struct RunParam {
             /// <summary>
@@ -21,7 +22,14 @@ namespace game_logic {
             public int frameCount;
         }
 
-        public Asset.AssetParam assetParam;
+        [Serializable]
+        public struct AppConfig {
+            public Asset.AssetParam assetParam;
+            public NLogService.NLogParam nLogParam;
+            public int frameRate;
+        }
+
+        public AppConfig appconfig;
         public RunParam runParam;
         public GameProcedure procedure = GameProcedure.None;
         
@@ -47,8 +55,9 @@ namespace game_logic {
 
         #region Systems
         
-        HashSet<WeakReference<ISystem>> systems;
+        public HashSet<WeakReference<ISystem>> systems;
         public Mission missionSystem;
+        public Round roundSystem;
 
         /// <summary>
         /// 注册系统
@@ -98,7 +107,7 @@ namespace game_logic {
 
         HashSet<WeakReference<IService>> services;
         public Asset assetService;
-        public NLogService logService;
+        public NLogService logService { get; set; }
         
         /// <summary>
         /// 注册服务

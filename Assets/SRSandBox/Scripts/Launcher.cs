@@ -2,12 +2,13 @@ using adt;
 using asset_service;
 using Cysharp.Threading.Tasks;
 using game_logic;
-using System;
+using log_service;
 using UnityEngine;
+
 namespace SRSandBox.Scripts {
     public class Launcher : MonoBehaviour {
 
-        public Asset.AssetParam AssetParam;
+        public GameContext.AppConfig appConfig;
         
         GameApp app;
         GameAppRunner runner;
@@ -15,7 +16,7 @@ namespace SRSandBox.Scripts {
             app = new GameApp();
             runner = new GameAppRunner();
             runner.SetRunApp(app);
-            app.Start(AssetParam).Forget();
+            app.Start(appConfig).Forget();
         }
 
         void OnDestroy() {

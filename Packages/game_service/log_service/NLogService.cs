@@ -1,39 +1,53 @@
 using adt;
 using Cysharp.Threading.Tasks;
+using game_service;
 using NLog;
-using NLog.Config;
+using NLog.Targets;
+using System;
+using UnityEngine;
 
-namespace game_logic.log_service {
+namespace log_service {
     public class NLogService : GameService {
 
+        [Serializable]
         public struct NLogParam {
-            
+            public TextAsset nlogConfig;
         }
-
-        NLogParam nlogParam;
-
+        
         public NLog.Logger logger;
         
-        public async UniTask<GameProcedure> Open(NLogParam nlogParam) {
-            this.nlogParam = nlogParam;
-
+        public async UniTask<GameProcedure> Open(NLogParam nLogParam) {
+            // 注册类型
             NLog.LogManager.Setup().SetupExtensions(ext => {
-                ext.RegisterTarget<NLogForUnity>();
+                ext.RegisterTarget<NLogForUnity>("NLogForUnity");
             });
-
-            var config = new LoggingConfiguration();
-            var logUnityConsole = new NLogForUnity();
-            config.AddRule(LogLevel.Info, LogLevel.Fatal, logUnityConsole);
-
-            NLog.LogManager.Configuration = config;
             
+            // 加载配置
+            NLog.LogManager.Setup().LoadConfigurationFromXml(nLogParam.nlogConfig.text);
+            var configuration = LogManager.Configuration;
+
+            var logfileTarget = configuration.FindTargetByName<FileTarget>("logfile");
+            if (logfileTarget != null) {
+                logfileTarget.FileName = Application.persistentDataPath + $"/logs/{logfileTarget.Name}_log.log";
+            }
+            var unityInfo = configuration.FindTargetByName<NLogForUnity>("unityInfo");
+            if (unityInfo != null) {
+                unityInfo.FileName = Application.persistentDataPath + $"/logs/{unityInfo.Name}_log.log";
+            }
+            var unityError = configuration.FindTargetByName<NLogForUnity>("unityError");
+            if (unityError != null) {
+                unityError.FileName = Application.persistentDataPath + $"/logs/{unityError.Name}_log.log";
+            }
+            LogManager.Configuration = configuration;
+            
+            // 获取logger
             logger = LogManager.GetCurrentClassLogger();
-            logger.Info("NLog 测试输出");
             return GameProcedure.Success;
         }
 
         public void Close() {
             logger = null;
+            NLog.LogManager.Shutdown();
         }
     }
 }

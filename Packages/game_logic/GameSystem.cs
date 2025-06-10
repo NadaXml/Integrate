@@ -1,6 +1,6 @@
 using game_fund;
 namespace game_logic {
-    public class GameSystem : ISystem, IUpdate {
+    public class GameSystem : ISystem {
         
         public void Awake() {
             OnAwake();

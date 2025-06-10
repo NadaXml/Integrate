@@ -3,8 +3,9 @@ using asset_service;
 using Cysharp.Threading.Tasks;
 using data_module;
 using game_fund;
-using game_logic.log_service;
 using game_logic.system;
+using game_service;
+using log_service;
 using System.Threading;
 using UnityEngine;
 
@@ -42,9 +43,10 @@ namespace game_logic {
             system.Destroy();
         }
         
-        async UniTask<GameProcedure> CreateSystems(CancellationTokenSource cancelSource) {
+        async UniTask<GameProcedure> CreateSystems(CancellationTokenSource _) {
             GameProcedure ret = GameProcedure.None; 
             gameContext.missionSystem = CreateSystem<Mission>();
+            gameContext.roundSystem = CreateSystem<Round>();
             ret = GameProcedure.Success;
             return ret;
         }
@@ -65,23 +67,27 @@ namespace game_logic {
         T CreateService<T>() where T : GameService, new() {
             T service = new T();
             gameContext.RegisterService(service);
+            service.SetFund(gameContext);
             service.Awake();
             return service;
         }
-
         
         async UniTask<GameProcedure> CreateServices(CancellationTokenSource cts) {
             GameProcedure ret = GameProcedure.None;
+            
+            var logService = CreateService<NLogService>();
+            ret = await logService.Open(gameContext.appconfig.nLogParam);
+            gameContext.logService = logService;
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
+            
             var assetService = CreateService<Asset>();
-            ret = await assetService.Init(gameContext.assetParam, cts);
+            ret = await assetService.Init(gameContext.appconfig.assetParam, cts);
             if (ret != GameProcedure.Success) {
                 return ret;
             }
             gameContext.assetService = assetService;
-
-            var logService = CreateService<NLogService>();
-            ret = await logService.Open(default);
-            gameContext.logService = logService;
             
             return ret;
         }
@@ -105,6 +111,7 @@ namespace game_logic {
         T CreateModule<T>() where T : GameModule, new() {
             T module = new T();
             gameContext.RegisterModule(module);
+            module.BindGameContext(gameContext);
             module.Awake();
             return module;
         }
@@ -124,13 +131,13 @@ namespace game_logic {
 
         CancellationTokenSource ctsForStart;
         
-        public async UniTask<GameProcedure> Start(Asset.AssetParam assetParam) {
+        public async UniTask<GameProcedure> Start(GameContext.AppConfig appconfig) {
 
             ctsForStart = new CancellationTokenSource();
             
             GameProcedure ret = GameProcedure.None;
             CreateGameContext();
-            gameContext.assetParam = assetParam;
+            gameContext.appconfig = appconfig;
             ret = await CreateServices(ctsForStart);
             if (ret != GameProcedure.Success) {
                 return ret;
@@ -146,11 +153,12 @@ namespace game_logic {
                 return ret;
             }
             
-            Debug.Log("crate mission frame " + Time.frameCount);
+            gameContext.logService.logger.Info($"crate mission frame {Time.frameCount}");
             ret = await gameContext.missionSystem.CreateMission();
-            Debug.Log("crate mission over frame" + Time.frameCount);
-
+            gameContext.logService.logger.Info($"crate mission over frame {Time.frameCount}");
             gameContext.procedure = ret;
+            gameContext.logService.logger.Info($"create mission ret {ret}");
+            
             return ret;
         }
 
@@ -167,15 +175,19 @@ namespace game_logic {
         }
 
         public void Tick() {
-            
+            foreach (var system in gameContext.systems) {
+                if (system.TryGetTarget(out ISystem target)) {
+                    target.Update();
+                }
+            }
         }
 
-        public void SetFrameCount(int frameCount) {
-            gameContext.runParam.frameCount = frameCount;
+        public void StepFrameCount(int delta) {
+            gameContext.runParam.frameCount += delta;
         }
 
-        public GameContext.RunParam GetRunParam() {
-            return gameContext.runParam;
+        public GameContext.AppConfig GetAppConfig() {
+            return gameContext.appconfig;
         }
 
         public GameProcedure GetGameProcedure() {

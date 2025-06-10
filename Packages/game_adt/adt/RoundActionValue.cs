@@ -12,8 +12,15 @@ namespace adt {
             };
         }
 
+        public static RoundActionValue FromValue(int speedValue) {
+            return new RoundActionValue() {
+                actionValue = ActionValue.FromValue(speedValue),
+                maxActionValue = ActionValue.FromValue(speedValue)
+            };
+        }
+
         public void Forward() {
-            actionValue -= 1;
+            actionValue = actionValue - 1;
         }
 
         public bool IsPass() {

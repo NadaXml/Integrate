@@ -27,7 +27,7 @@ namespace data_module {
         }
 
         public async UniTask<FlatBufferBinary> LoadConfigFlatBufferBinary(string location) {
-            using (var resHandleRole = GameContext.assetService.LoadAssetAsync<FlatBufferBinary>(location)) {
+            using (var resHandleRole = gameContext.assetService.LoadAssetAsync<FlatBufferBinary>(location)) {
                 await resHandleRole.ToUniTask();
                 if (resHandleRole.IsSucceed()) {
                     return resHandleRole.GetAsset<FlatBufferBinary>();
@@ -37,8 +37,6 @@ namespace data_module {
         }
 
         public async UniTask<GameProcedure> LoadMissionCfg() {
-            GameProcedure ret = GameProcedure.None;
-
             FlatBufferBinary temp;
             // TODO 关联，用于数据加载和卸载均衡
             // TODO 理论上这里是需要进行句柄的生命周期管理，这里保存的tb可能会失效
@@ -60,7 +58,7 @@ namespace data_module {
                 return GameProcedure.AssetLoad;
             }
             tbmission = Tbmission.GetRootAsTbmission(new ByteBuffer(temp.bytes));
-            return ret;
+            return GameProcedure.Success;
         }
     }
 }

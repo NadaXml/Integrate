@@ -46,8 +46,10 @@ namespace game_logic.system {
             gameContext.dataModule.tbmission = default;
             
             // 释放Data
-            gameContext.dataModule.simulationData.Destroy();
-            gameContext.dataModule.simulationData = null;
+            if (gameContext.dataModule.simulationData != null) {
+                gameContext.dataModule.simulationData.Destroy();
+                gameContext.dataModule.simulationData = null;
+            }
             return GameProcedure.Success;
         }
 
@@ -77,22 +79,24 @@ namespace game_logic.system {
             SimulationData data = gameContext.dataModule.simulationData;
             BattleField battleField = new BattleField();
             cfg.Tbmission tbmission = gameContext.dataModule.tbmission;
-
             for (int i = 0; i < tbmission.DataListLength; i++) {
                 cfg.mission? mission = tbmission.DataList(i);
                 if (mission?.Id == 1) {
                     battleField.mission = new MissionComponent(mission.GetValueOrDefault());
                 }
             }
-
             var turns = new List<TurnComponent>(battleField.mission.mission.MaxTurn);
             for (int i = 0; i < battleField.mission.mission.MaxTurn; i++) {
+                int turnActionValue = battleField.mission.mission.TurnActionValue;
+                if (i == 0) {
+                    turnActionValue = battleField.mission.mission.FirstTrunActionValue;
+                }
                 turns.Add(new TurnComponent() {
-                    roundActionValue = RoundActionValue.FromSpeed();
+                    roundActionValue = RoundActionValue.FromValue(turnActionValue)
                 });
             }
             battleField.turns = turns;
-                
+            battleField.nowTurnIndex = 0;
             data.battleField = battleField;
             return GameProcedure.Success;
         }

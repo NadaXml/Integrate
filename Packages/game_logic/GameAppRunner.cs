@@ -21,12 +21,12 @@ namespace game_logic {
         
         public void Run(float delta) {
             float t = delta + runVar.accumulate;
-            GameContext.RunParam runParam = app.GetRunParam();
-            float dt = 1.0f / runParam.frameRate;
+            GameContext.AppConfig appConfig = app.GetAppConfig();
+            float dt = 1.0f / appConfig.frameRate;
             while (t > dt) {
                 t -= dt;
                 app.Tick();
-                app.SetFrameCount(runParam.frameCount + 1);
+                app.StepFrameCount(1);
                 // need break ?
             }
             if (t > 0) {

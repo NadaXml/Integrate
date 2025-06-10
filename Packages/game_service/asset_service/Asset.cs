@@ -1,7 +1,7 @@
 using adt;
 using YooAsset;
 using Cysharp.Threading.Tasks;
-using game_logic;
+using game_service;
 using System;
 using System.Threading;
 using Debug = UnityEngine.Debug;
@@ -65,7 +65,7 @@ namespace asset_service {
             // }
 
             if (initializationOperation.Status != EOperationStatus.Succeed) {
-                Debug.LogError($"{initializationOperation.Error}");
+                fundProvider.logService.logger.Error($"{initializationOperation.Error}");
                 return ret;
             }
 
@@ -76,14 +76,14 @@ namespace asset_service {
             ret = GameProcedure.UpdatePackageVersion;
             
             var version = initializationOperation.PackageVersion;
-            Debug.Log($"Init resource package version : {version}");
+            fundProvider.logService.logger.Info($"Init resource package version : {version}");
 
             var defaultPackage = YooAssets.GetPackage(package.PackageName);
             var updatePackageOperation = defaultPackage.UpdatePackageVersionAsync();
             await updatePackageOperation.ToUniTask();
 
             if (updatePackageOperation.Status != EOperationStatus.Succeed) {
-                Debug.LogWarning($"{updatePackageOperation.Error}");
+                fundProvider.logService.logger.Error($"{updatePackageOperation.Error}");
                 return ret;
             }
             
@@ -91,7 +91,7 @@ namespace asset_service {
                 return GameProcedure.Cancel;
             }
             
-            Debug.Log($"update resource package version : {updatePackageOperation.PackageVersion}");
+            fundProvider.logService.logger.Info($"update resource package version : {updatePackageOperation.PackageVersion}");
 
             ret = GameProcedure.UpdatePackageManifest;
 
@@ -100,7 +100,7 @@ namespace asset_service {
             await updateManifestOperation.ToUniTask();
             
             if (updateManifestOperation.Status != EOperationStatus.Succeed) {
-                Debug.LogWarning($"{updateManifestOperation.Error}");
+                fundProvider.logService.logger.Error($"{updateManifestOperation.Error}");
                 return ret;
             }
             
@@ -113,12 +113,12 @@ namespace asset_service {
             var downloader = defaultPackage.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);
             
             if (downloader.TotalDownloadCount == 0) {
-                Debug.Log("No downloading resources are available");
+                fundProvider.logService.logger.Info("No downloading resources are available");
             }
             
             YooAssets.SetDefaultPackage(defaultPackage);
             
-            Debug.Log(" asset service ok");
+            fundProvider.logService.logger.Info(" asset service ok");
 
             return GameProcedure.Success;
         }

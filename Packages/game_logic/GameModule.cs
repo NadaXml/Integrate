@@ -19,10 +19,10 @@ namespace game_logic {
         }
 
         public void BindGameContext(GameContext gameContext) {
-            GameContext = gameContext;
+            this.gameContext = gameContext;
         }
         
-        public GameContext GameContext;
+        public GameContext gameContext;
     }
 }
 

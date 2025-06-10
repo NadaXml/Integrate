@@ -1,5 +1,5 @@
 using game_fund;
-namespace game_logic {
+namespace game_service {
     public class GameService : IService, IUpdate {
 
         public void Awake() {
@@ -23,6 +23,11 @@ namespace game_logic {
 
         protected virtual void OnUpdate() {
             
+        }
+
+        protected IFunProvider fundProvider;
+        public void SetFund(IFunProvider fund) {
+            fundProvider = fund;
         }
     }
 }
