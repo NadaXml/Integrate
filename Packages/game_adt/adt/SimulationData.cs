@@ -6,9 +6,10 @@ namespace adt {
         public BattleField battleField;
         public Dictionary<int, Actor> actors = new();
         public GameStatus gameStatus;
-        int allocateId = 0;
-
+        public RoundStatus roundStatus;
         public Queue<IMove> actionQueue = new Queue<IMove>();
+        
+        int allocateId = 0;
         
         public void AddActor(Actor actor) {
             int id = allocateId++;
@@ -34,6 +35,18 @@ namespace adt {
             builder.AppendLine($"status: {gameStatus}");
             builder.AppendLine($"now turnIndex: {battleField.nowTurnIndex}");
             return builder.ToString();
+        }
+
+        public bool CheckRoundRunning() {
+            if (gameStatus != GameStatus.Running) {
+                return false;
+            }
+            return true;
+        }
+
+        public void ResetRunningStatus() {
+            gameStatus = GameStatus.Running;
+            roundStatus = RoundStatus.Running;
         }
     }
 }

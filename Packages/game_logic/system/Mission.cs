@@ -1,14 +1,18 @@
 using adt;
 using cfg;
 using Cysharp.Threading.Tasks;
-using Google.FlatBuffers;
-using extension;
-using JetBrains.Annotations;
+using event_adt;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace game_logic.system {
     public class Mission : GameSystem {
+
+        int increaseUUID;
+        
+        public async UniTask<GameProcedure> Init() {
+            increaseUUID = 0;
+            return GameProcedure.Success;
+        }
 
         public async UniTask<GameProcedure> CreateMission() {
             GameProcedure ret = GameProcedure.None;
@@ -20,7 +24,7 @@ namespace game_logic.system {
             }
             
             await UniTask.DelayFrame(5);
-
+            
             gameContext.dataModule.simulationData = new SimulationData();
             gameContext.dataModule.simulationData.gameStatus = GameStatus.Prepare;
             
@@ -32,8 +36,12 @@ namespace game_logic.system {
             
             ret = CreateActor();
 
+            
             if (ret == GameProcedure.Success) {
-                gameContext.dataModule.simulationData.gameStatus = GameStatus.Running;
+                gameContext.dataModule.simulationData.gameStatus = GameStatus.Start;
+                gameContext.eventModule.Dispatcher.Send(EventDef.StartMission, null);
+                // TODO startMission是异步的情况，事件是不应该同步且关注事件是否执行结束，要用另外的状态控制
+                gameContext.dataModule.simulationData.ResetRunningStatus();
             }
             
             return ret;
@@ -70,6 +78,7 @@ namespace game_logic.system {
                     action = ActionComponent.FromCfg(role1.GetValueOrDefault(), setting.GetValueOrDefault()),
                     battle = BattleComponent.FromCfg(role1.GetValueOrDefault())
                 };
+                actor.UUID = increaseUUID;
                 data.AddActor(actor);
             }
             return GameProcedure.Success;

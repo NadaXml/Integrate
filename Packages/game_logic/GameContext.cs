@@ -1,9 +1,10 @@
 using adt;
 using asset_service;
-using data_module;
+using game_logic.module;
 using game_fund;
 using game_logic.system;
 using game_service;
+using game_service.pool_service;
 using log_service;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,7 @@ namespace game_logic {
         public HashSet<WeakReference<ISystem>> systems;
         public Mission missionSystem;
         public Round roundSystem;
+        public DebugConsole debugConsoleSystem;
 
         /// <summary>
         /// 注册系统
@@ -85,8 +87,9 @@ namespace game_logic {
 
         #region Module
         
-        HashSet<WeakReference<IModule>> modules;
+        public HashSet<WeakReference<IModule>> modules;
         public Data dataModule;
+        public EventCenter eventModule;
 
         public void RegisterModule(IModule module) {
             modules.Add(new WeakReference<IModule>(module));
@@ -105,9 +108,10 @@ namespace game_logic {
         
         #region Services
 
-        HashSet<WeakReference<IService>> services;
+        public HashSet<WeakReference<IService>> services;
         public Asset assetService;
         public NLogService logService { get; set; }
+        public PoolService poolService { get; set; }
         
         /// <summary>
         /// 注册服务

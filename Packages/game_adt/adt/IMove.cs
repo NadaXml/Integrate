@@ -1,5 +1,5 @@
 namespace adt {
-    public interface IMove {
+    public interface IMove : IUnique {
         ActionComponent action { get; set; }
     }
 }

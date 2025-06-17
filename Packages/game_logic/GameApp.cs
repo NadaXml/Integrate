@@ -1,11 +1,13 @@
 using adt;
 using asset_service;
 using Cysharp.Threading.Tasks;
-using data_module;
+using game_logic.module;
 using game_fund;
 using game_logic.system;
 using game_service;
+using game_service.pool_service;
 using log_service;
+using System;
 using System.Threading;
 using UnityEngine;
 
@@ -47,12 +49,17 @@ namespace game_logic {
             GameProcedure ret = GameProcedure.None; 
             gameContext.missionSystem = CreateSystem<Mission>();
             gameContext.roundSystem = CreateSystem<Round>();
+            gameContext.debugConsoleSystem = CreateSystem<DebugConsole>();
             ret = GameProcedure.Success;
             return ret;
         }
         
         void DestroySystems() {
-            DestroySystem(gameContext.missionSystem);
+            foreach (WeakReference<ISystem> weakRef in gameContext.systems) {
+                if (weakRef.TryGetTarget(out ISystem system)) {
+                    DestroySystem(system);
+                }
+            }
         }
         
   #endregion
@@ -88,21 +95,35 @@ namespace game_logic {
                 return ret;
             }
             gameContext.assetService = assetService;
+
+            var poolService = CreateService<PoolService>();
+            ret = await poolService.Init(cts);
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
+            gameContext.poolService = poolService;
             
             return ret;
         }
         
         void DestroyServices() {
-            gameContext.assetService.Close();
-            DestroyService(gameContext.assetService);
-            gameContext.logService.Close();
-            DestroyService(gameContext.logService);
+            foreach (var weakRef in gameContext.services) {
+                DestroyService(gameContext.assetService);
+            }
         }
         
   #endregion
         
         #region GameModule
 
+        void DestroyModules() {
+            foreach (var weakRef in gameContext.modules) {
+                if (weakRef.TryGetTarget(out IModule module)) {
+                    DestroyModule(module);
+                }
+            }
+        }
+        
         void DestroyModule(IModule module) {
             gameContext.UnRegisterModule(module);
             module.Destroy();
@@ -117,13 +138,19 @@ namespace game_logic {
         }
 
         async UniTask<GameProcedure> CreateModules(CancellationTokenSource cts) {
-            GameProcedure ret = GameProcedure.None;
+            GameProcedure ret = GameProcedure.Success;
             var dataModule = CreateModule<Data>();
             ret = await dataModule.Init(cts);
             if (ret != GameProcedure.Success) {
                 return ret;
             }
             gameContext.dataModule = dataModule;
+            var eventModule = CreateModule<EventCenter>();
+            ret = await eventModule.Init(cts);
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
+            gameContext.eventModule = eventModule;
             return ret;
         }
         
@@ -170,6 +197,7 @@ namespace game_logic {
             }
             
             DestroySystems();
+            DestroyModules();
             DestroyServices();
             DestroyGameContext();
         }

@@ -9,7 +9,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 
-namespace data_module {
+namespace game_logic.module {
     public class Data : GameModule {
 
         #region 表格
@@ -59,6 +59,13 @@ namespace data_module {
             }
             tbmission = Tbmission.GetRootAsTbmission(new ByteBuffer(temp.bytes));
             return GameProcedure.Success;
+        }
+
+        protected override void OnDestroy() {
+            if (simulationData != null) {
+                simulationData.Destroy();
+                simulationData = null;
+            }
         }
     }
 }

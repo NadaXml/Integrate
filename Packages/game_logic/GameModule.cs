@@ -21,8 +21,8 @@ namespace game_logic {
         public void BindGameContext(GameContext gameContext) {
             this.gameContext = gameContext;
         }
-        
-        public GameContext gameContext;
+
+        protected GameContext gameContext;
     }
 }
 

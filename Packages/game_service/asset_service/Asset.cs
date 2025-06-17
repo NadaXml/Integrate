@@ -142,7 +142,7 @@ namespace asset_service {
         //     };
         // }
 
-        public void Close() {
+        protected override void OnDestroy() {
             var package = YooAssets.GetPackage(param.packageName);
             package.ForceUnloadAllAssets();
             YooAssets.DestroyPackage(param.packageName);

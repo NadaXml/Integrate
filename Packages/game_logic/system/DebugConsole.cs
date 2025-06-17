@@ -4,13 +4,8 @@ using IngameDebugConsole;
 using UnityEngine;
 namespace game_logic.system {
     public class DebugConsole : GameSystem {
-        GameObject _inspectorGo;
-
         protected override void OnDestroy() {
-            if (_inspectorGo != null) {
-                Object.Destroy(_inspectorGo);
-                _inspectorGo = null;
-            }
+   
         }
 
         public async UniTask<GameProcedure> Init() {

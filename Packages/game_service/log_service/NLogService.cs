@@ -44,8 +44,7 @@ namespace log_service {
             logger = LogManager.GetCurrentClassLogger();
             return GameProcedure.Success;
         }
-
-        public void Close() {
+        protected override void OnDestroy() {
             logger = null;
             NLog.LogManager.Shutdown();
         }

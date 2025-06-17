@@ -1,15 +1,30 @@
 using adt;
+using event_adt;
+using game_logic.module;
+using System;
 using System.Collections.Generic;
+using UnityEngine.Assertions.Must;
 namespace game_logic.system {
     public class Round : GameSystem {
         protected override void OnUpdate() {
             base.OnUpdate();
 
             SimulationData simulationData = gameContext.dataModule.simulationData;
-            if (simulationData.gameStatus != GameStatus.Running) {
+            if (!simulationData.CheckRoundRunning()) {
                 return;
             }
-            Step(simulationData);
+
+            switch (simulationData.roundStatus) {
+                case RoundStatus.Running:
+                    Step(simulationData); 
+                    break;
+                case RoundStatus.ContinueSelect:
+                    SettleMove(simulationData);
+                    break;
+                case RoundStatus.Select:
+                default: 
+                    break;
+            }
         }
 
         void RoundOver() {
@@ -36,6 +51,13 @@ namespace game_logic.system {
                 ActionComponent* p = &action;
                 p->roundActionValue.Reset();
                 move.action = action;
+                simulationData.roundStatus = RoundStatus.Select;
+                var param = new EventParam<EventRoundHandle>();
+                param.extra = new EventRoundHandle() {
+                    settleUUID = move.UUID
+                };
+                gameContext.eventModule.Dispatcher.Send(EventDef.RoundHandle, param);
+                break;
             }
         }
 
@@ -45,7 +67,11 @@ namespace game_logic.system {
             TurnComponent* p = &turn;
             p->roundActionValue.Forward();
             turns[simulationData.battleField.nowTurnIndex] = turn;
-            
+        }
+
+        void ForwardTurn(SimulationData simulationData) {
+            List<TurnComponent> turns = simulationData.battleField.turns;
+            var turn = turns[simulationData.battleField.nowTurnIndex];
             // 推进轮次，校验轮次是否结束
             if (turn.roundActionValue.IsPass()) {
                 simulationData.battleField.nowTurnIndex += 1;
@@ -61,11 +87,12 @@ namespace game_logic.system {
                 HandleMove(move, simulationData);
             }
             
-            // 结算行动
-            SettleMove(simulationData);
-            
             // 轮次消耗行动值
             HandleTurn(simulationData);
+            // 回合消耗行动值
+            ForwardTurn(simulationData);
+            // 结算行动
+            SettleMove(simulationData);
 
             if (simulationData.battleField.CheckNeedTurn()) {
                 RoundOver();
