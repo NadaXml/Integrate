@@ -1,0 +1,14 @@
+
+
+--- @class B2D.BodyType
+local BodyType = {}
+
+BodyType.StaticBody = 0
+
+BodyType.KinematicBody = 1
+
+BodyType.DynamicBody = 2
+
+BodyType.BodyTypeCount = 3
+
+return BodyType

@@ -1,0 +1,10 @@
+
+
+--- @class World
+local World = Class({})
+
+--- @type World
+World.World0 = nil
+
+
+return World
