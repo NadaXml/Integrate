@@ -1,5 +1,5 @@
 namespace adt {
-    public interface IBattle : IUnique {
+    public interface IBattle : IAbility {
         public BattleComponent battle { get; set; }
     }
 }

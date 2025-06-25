@@ -8,6 +8,8 @@ namespace adt {
         public GameStatus gameStatus;
         public RoundStatus roundStatus;
         public Queue<IMove> actionQueue = new Queue<IMove>();
+
+        public Dictionary<int, List<Ability>> abilities = new();
         
         int allocateId = 0;
         

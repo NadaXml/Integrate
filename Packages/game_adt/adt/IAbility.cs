@@ -1,5 +1,5 @@
 namespace adt {
-    public interface IUnique {
+    public interface IAbility {
         int UUID { get; set; }
     }
 }

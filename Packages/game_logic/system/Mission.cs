@@ -35,7 +35,12 @@ namespace game_logic.system {
             }
             
             ret = CreateActor();
+            
+            if (ret != GameProcedure.Success) {
+                return ret;
+            }
 
+            ret = CreateAbility();
             
             if (ret == GameProcedure.Success) {
                 gameContext.dataModule.simulationData.gameStatus = GameStatus.Start;
@@ -81,6 +86,10 @@ namespace game_logic.system {
                 actor.UUID = increaseUUID;
                 data.AddActor(actor);
             }
+            return GameProcedure.Success;
+        }
+
+        GameProcedure CreateAbility() {
             return GameProcedure.Success;
         }
 

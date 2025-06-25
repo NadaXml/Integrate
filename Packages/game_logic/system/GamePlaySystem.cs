@@ -23,7 +23,12 @@ namespace game_logic.system {
         }
 
         void RoundHandle(EventParam param) {
-            
+            // create ability
+        }
+
+        protected override void OnUpdate() {
+            base.OnUpdate();
+            // ability 和 actor平行关系，order更新
         }
     }
 }
